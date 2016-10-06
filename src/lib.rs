@@ -51,22 +51,9 @@
 #![cfg_attr(feature="clippy", deny(clippy))]
 #![cfg_attr(feature="clippy", allow(use_debug))]
 
-extern crate core;
 extern crate itertools;
-// #[macro_use]
-// extern crate maidsafe_utilities;
-// #[cfg(test)]
-// extern crate rand;
-// extern crate rust_sodium;
 extern crate rustc_serialize;
-// #[cfg(test)]
-// extern crate tempdir;
 extern crate tiny_keccak;
-// #[cfg(test)]
-// #[macro_use]
-// extern crate unwrap;
-use std::iter::Iterator;
-
 
 use itertools::Itertools;
 use tiny_keccak::Keccak;
@@ -75,56 +62,74 @@ use tiny_keccak::Keccak;
 /// Holds the prover requirements
 #[derive(RustcEncodable, RustcDecodable)]
 pub struct ResourceProof {
-	min_size : usize, /// minimum size of proof in bytes
-  difficulty: u8,
+    min_size: usize,
+    /// minimum size of proof in bytes
+    difficulty: u8,
 }
 
 
 impl ResourceProof {
-  /// Rounds will factor how large the message to send is. It also has a slight impact on the
-  /// hash power required, but this is minimal.
-  pub fn new(min_size: usize, difficulty: u8) -> ResourceProof {
-    ResourceProof {
-      min_size: min_size,
-      difficulty: difficulty,
+    /// Rounds will factor how large the message to send is. It also has a slight impact on the
+    /// hash power required, but this is minimal.
+    pub fn new(min_size: usize, difficulty: u8) -> ResourceProof {
+        ResourceProof {
+            min_size: min_size,
+            difficulty: difficulty,
+        }
     }
-  }
 
-  /// Use some data from them and some from you to create a proof.
-  pub fn create_proof(&self, our_data: &[u8], their_data: &[u8]) -> Vec<u8> {
-    let mut data = self.create_proof_data(our_data, their_data);
-    while ResourceProof::leading_zeros(&hash(&data[..])) < self.difficulty as usize {
-      data.push(0u8);
+    /// Use some data from them and some from you to create a proof.
+    pub fn create_proof(&self, claiment_data: &[u8], reciever_data: &[u8]) -> Vec<u8> {
+        let mut data = self.create_proof_data(claiment_data, reciever_data);
+        while ResourceProof::leading_zeros(&hash(&data[..])) < self.difficulty as usize {
+            data.push(0u8);
+        }
+        data
     }
-   data
-  }
 
-  /// Use some data from them and some from you to confirm a proof.
-  pub fn validate_proof(&self, _our_data: &[u8], _their_data: &[u8], proof: &[u8]) -> bool {
-    // check hash
-    ResourceProof::leading_zeros(proof) >= self.difficulty as usize
-    // check proof data
+    /// Use some data from them and some from you to confirm a proof.
+    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], _proof: &[u8]) -> bool {
+        let data = self.create_proof_data(claiment_data, reciever_data);
+        self.check_hash(&data[..])
+        // Self::check_proof_data(&data[..], proof)
+        // Self::check_trailing_zeros(&data[..], proof)
+    }
+    #[allow(unused)]
+    fn check_hash(&self, data: &[u8]) -> bool {
+        ResourceProof::leading_zeros(&hash(&data[..])) >= self.difficulty as usize
+    }
 
+    #[allow(unused)]
+    fn check_proof_data(data: &[u8], proof: &[u8]) -> bool {
+        data.iter().zip(proof.iter().take(data.len())).all(|(a, b)| a == b)
+    }
 
-  }
+    #[allow(unused)]
+    fn check_trailing_zeros(data: &[u8], proof: &[u8]) -> bool {
+        proof.iter().skip(data.len()).all(|&x| x == 0u8)
+    }
 
+    fn create_proof_data(&self, claiment_data: &[u8], reciever_data: &[u8]) -> Vec<u8> {
+        claiment_data.iter()
+            .chain(reciever_data.iter())
+            .cloned()
+            .cycle()
+            .take(self.min_size)
+            .collect_vec()
+    }
 
-  fn create_proof_data(&self, our_data: &[u8], their_data: &[u8]) -> Vec<u8> {
-    our_data.iter().chain(their_data.iter()).cloned().cycle().take(self.min_size).collect_vec()
-  }
-
-  fn leading_zeros(data: &[u8]) -> usize {
-    let mut size = 0;
-    for (count, i) in data.iter().enumerate() {
-      size = count * 8;
-      size  += i.leading_zeros() as usize;
-      if i.leading_zeros() < 8 { break; }
-    };
-    size
-  }
-
+    fn leading_zeros(data: &[u8]) -> usize {
+        let mut size = 0;
+        for (count, i) in data.iter().enumerate() {
+            size = count * 8;
+            size += i.leading_zeros() as usize;
+            if i.leading_zeros() < 8 {
+                break;
+            }
+        }
+        size
+    }
 }
-
 
 /// Simple wrapper around tiny-keccak
 pub fn hash(data: &[u8]) -> [u8; 32] {
@@ -135,44 +140,54 @@ pub fn hash(data: &[u8]) -> [u8; 32] {
     res
 }
 
-
 #[cfg(test)]
 mod tests {
-  use super::*;
+    use super::*;
 
     #[test]
     fn min_data_size() {
-       let a = [1,2,3];
-       let b = [3,4,5];
-       let proof = ResourceProof::new(1024, 3);
-       // println!("size is {}", proof.create_proof_data(&a, &b).len());
-       // println!("proof is {:?}", proof.create_proof_data(&a, &b));
-       assert!(proof.create_proof_data(&a, &b).len() == 1024);
+        let a = [1, 2, 3];
+        let b = [3, 4, 5];
+        let proof = ResourceProof::new(1024, 3);
+        assert!(proof.create_proof_data(&a, &b).len() == 1024);
     }
 
     #[test]
     fn min_proof_size() {
-       let a = [1,2,3];
-       let b = [3,4,5];
-       let proof = ResourceProof::new(1024*1024, 6);
-       assert!(proof.create_proof(&a, &b).len() > 1024);
+        let a = [1, 2, 3];
+        let b = [3, 4, 5];
+        let proof = ResourceProof::new(1024 * 10, 3);
+        assert!(proof.create_proof(&a, &b).len() > 1024);
 
     }
 
     #[test]
     fn proof_no_work() {
-       let a = [1,2,3];
-       let b = [3,4,5];
-       let proof = ResourceProof::new(1024, 0);
-       assert!(proof.create_proof_data(&a, &b).len() == 1024);
+        let a = [1, 2, 3];
+        let b = [3, 4, 5];
+        let proof = ResourceProof::new(1024, 0);
+        assert!(proof.create_proof_data(&a, &b).len() == 1024);
     }
 
     #[test]
     fn valid_proof() {
-       let a = [1,5,3];
-       let b = [9,4,5];
-       let proof = ResourceProof::new(1024, 3);
-       assert!(proof.validate_proof(&a, &b, &proof.create_proof(&a, &b)[..]));
+        let claiment = [1, 5, 3];
+        let receiver = [9, 4, 5];
+        let proof = ResourceProof::new(1024, 3);
+        // claiment
+        let mut data = proof.create_proof(&claiment, &receiver);
+
+        assert!(proof.check_hash(&data[..]));
+        assert!(ResourceProof::check_trailing_zeros(&data[..],
+                                                    &proof.create_proof_data(&claiment, &receiver)));
+        assert!(ResourceProof::check_proof_data(&data[..],
+                                                &proof.create_proof_data(&claiment, &receiver)));
+
+        // assert!(proof.validate_proof(&claiment, &receiver, &data[..]));
+        //
+         data.push(0u8);
+        //
+        // assert!(!proof.validate_proof(&claiment, &receiver, &data[..]));
 
     }
 

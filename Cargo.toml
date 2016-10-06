@@ -1,14 +1,13 @@
 [package]
-name = "resource_proof"
 authors = ["David Irvine <david.irvine@maidsafe.net>"]
-description ="A 'proof' of bandwidth, cpu and storage for nodes in a decentralised network"
-repository = "https://github.com/dirvine/resource_proof"
+description = "A 'proof' of bandwidth, cpu and storage for nodes in a decentralised network"
 license = "GPL-3.0"
-version = "0.1.0"
+name = "resource_proof"
 readme = "README.md"
+repository = "https://github.com/dirvine/resource_proof"
+version = "0.1.0"
 
 [dependencies]
-clippy = {version = "~0.0.86", optional = true}
 itertools = "0.4.18"
 maidsafe_utilities = "~0.9.0"
 rayon = "~0.4.0"
@@ -16,7 +15,12 @@ rust_sodium = "~0.1.1"
 rustc-serialize = "~0.3.19"
 tiny-keccak = "~1.1.1"
 
+[dependencies.clippy]
+optional = true
+version = "~0.0.86"
+
 [dev-dependencies]
+quickcheck = "0.3.1"
 rand = "~0.3.14"
 tempdir = "~0.3.5"
 unwrap = "~1.1.0"

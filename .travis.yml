@@ -1,0 +1,28 @@
+env:
+  global:
+  - TRAVIS_CARGO_NIGHTLY_FEATURE=""
+  - secure: YmixIWgxHSrywEIw+pXaRqPv0W2x/OrYm/R91E/Jb4e4/COdUxs7QH0FkTLgKNN/DiMuSwth9/HGDinFu0YxU3ZvlInEIUIUr5XIkR15DaK3jxxDUzi1gmfhvH2qXuj7zf1ESrkiroekNjFn4xM9vnpr8Yu6TtZCKnmkvVFOLlc3S7hRyyiIlHbe+sAAM5eMp6XYq6ii9VC7bYndhCpkjikUxY2sdVFWcIxGGfHd62bOHe9JS1HSShqziE1mPX0SMEFlepDCfuuVMED0TXuW1cHqNi1XfFHz1qbhUBlejJ0wDLd4Ze5g0av32uQrAo8a/lzJ9de9CMtAoCrXOOJ4VqLFIgA8Ypqs81AbzfL1VYtZJcBSxSbL3S5tgNBE0YOA3TyFTwVxZAB6FaUX4rZcD90cGizzeUYK1WL4HG0fxkPf5bVCw6muG7yEj0rlBr1rpTo8SOwUO2JWzDgvZ4c9QkBlOVw6YxLmmcklwGc3mcGEa0T1KG8yn5DHFwo17PLKiyfrrF/iuDASN5aidkkLgpkZJwVGaw+wf3xIBvvwOO+CT5RgSYwKH4PDv0z6evldmtOx5TXwO1Su5Y73DSsilsM8PBUUubiHRAUGlRI1cm2+1MMjp+aCL6JeMspkE3PXGJQ83lVUexSFDMDxVh492beiwcufQLpMsUP+VxG966E=
+sudo: false
+os:
+- linux
+- osx
+language: rust
+rust:
+- stable
+- beta
+branches:
+  only:
+  - master
+cache:
+  cargo: true
+  directories:
+  - "$HOME/elfutils"
+script:
+- curl -sSL https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/build_and_run_tests.sh
+  | bash
+before_cache:
+- curl -sSLO https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/install_elfutils.sh
+- ". install_elfutils.sh"
+after_success:
+- curl -sSL https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/after_success.sh
+  | bash
