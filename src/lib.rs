@@ -88,11 +88,11 @@ impl ResourceProof {
     }
 
     /// Use some data from them and some from you to confirm a proof.
-    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], _proof: &[u8]) -> bool {
+    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], proof: &[u8]) -> bool {
         let data = self.create_proof_data(claiment_data, reciever_data);
-        self.check_hash(&data[..])
-        // Self::check_proof_data(&data[..], proof)
-        // Self::check_trailing_zeros(&data[..], proof)
+        self.check_hash(&data[..]) &&
+        Self::check_proof_data(&data[..], proof) &&
+        Self::check_trailing_zeros(&data[..], proof)
     }
     #[allow(unused)]
     fn check_hash(&self, data: &[u8]) -> bool {
@@ -173,21 +173,21 @@ mod tests {
     fn valid_proof() {
         let claiment = [1, 5, 3];
         let receiver = [9, 4, 5];
-        let proof = ResourceProof::new(1024, 3);
+        let rp = ResourceProof::new(1024, 3);
         // claiment
-        let mut data = proof.create_proof(&claiment, &receiver);
+        let mut proof = rp.create_proof(&claiment, &receiver);
 
-        assert!(proof.check_hash(&data[..]));
-        assert!(ResourceProof::check_trailing_zeros(&data[..],
-                                                    &proof.create_proof_data(&claiment, &receiver)));
-        assert!(ResourceProof::check_proof_data(&data[..],
-                                                &proof.create_proof_data(&claiment, &receiver)));
+        assert!(rp.check_hash(&proof[..]));
+        assert!(ResourceProof::check_trailing_zeros(&proof[..],
+                                                    &rp.create_proof_data(&claiment, &receiver)));
+        assert!(ResourceProof::check_proof_data(&proof[..],
+                                                &rp.create_proof_data(&claiment, &receiver)));
 
-        // assert!(proof.validate_proof(&claiment, &receiver, &data[..]));
-        //
-         data.push(0u8);
-        //
-        // assert!(!proof.validate_proof(&claiment, &receiver, &data[..]));
+        assert!(rp.validate_proof(&claiment, &receiver, &proof[..]));
+
+         proof.push(0u8);
+
+        assert!(!rp.validate_proof(&claiment, &receiver, &proof[..]));
 
     }
 
