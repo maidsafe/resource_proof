@@ -121,8 +121,8 @@ impl ResourceProof {
             size = count * 8;
             size += i.leading_zeros() as usize;
             if i.leading_zeros() < 8 {
-                break;
-            }
+                return size;
+            };
         }
         size
     }
