@@ -120,9 +120,11 @@ impl ResourceProof {
         for (count, i) in data.iter().enumerate() {
             size = count * 8;
             size += i.leading_zeros() as usize;
-            if i.leading_zeros() < 8 {
-                return size;
-            };
+            if i.leading_zeros() == 8 {
+                continue;
+            } else {
+              return size;
+            }
         }
         size
     }
