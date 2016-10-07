@@ -93,17 +93,15 @@ impl ResourceProof {
         self.check_hash(&proof[..]) && Self::check_proof_data(&data[..], proof) &&
         Self::check_trailing_zeros(&data[..], proof)
     }
-    #[allow(unused)]
+
     fn check_hash(&self, data: &[u8]) -> bool {
         ResourceProof::leading_zeros(&hash(&data[..])) >= self.difficulty as usize
     }
 
-    #[allow(unused)]
     fn check_proof_data(data: &[u8], proof: &[u8]) -> bool {
         data.iter().zip(proof.iter().take(data.len())).all(|(a, b)| a == b)
     }
 
-    #[allow(unused)]
     fn check_trailing_zeros(data: &[u8], proof: &[u8]) -> bool {
         proof.iter().skip(data.len()).all(|&x| x == 0u8)
     }
@@ -155,7 +153,7 @@ mod tests {
     fn min_proof_size() {
         let a = [1, 2, 3];
         let b = [3, 4, 5];
-        let proof = ResourceProof::new(1024 * 10, 3);
+        let proof = ResourceProof::new(1024 * 1024, 3);
         assert!(proof.create_proof(&a, &b).len() > 1024);
 
     }
