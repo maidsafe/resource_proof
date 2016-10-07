@@ -90,7 +90,7 @@ impl ResourceProof {
     /// Use some data from them and some from you to confirm a proof.
     pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], proof: &[u8]) -> bool {
         let data = self.create_proof_data(claiment_data, reciever_data);
-        self.check_hash(&data[..]) &&
+        self.check_hash(&proof[..]) &&
         Self::check_proof_data(&data[..], proof) &&
         Self::check_trailing_zeros(&data[..], proof)
     }
