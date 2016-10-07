@@ -6,9 +6,6 @@ status](https://ci.appveyor.com/api/projects/status/fcpgnw8kya193w87?svg=true)](
 Status](https://travis-ci.org/dirvine/resource_proof.svg?branch=master)](https://travis-ci.org/dirvine/resource_proof)
 
 
-| [API Documentation - master branch](http://docs.maidsafe.net/resource_proof/master) | [MaidSafe website](http://maidsafe.net) | [SAFE Network Forum](https://forum.safenetwork.io) |
-|:------:|:-------:|:-------:|:-------:|
-
 
 
 
