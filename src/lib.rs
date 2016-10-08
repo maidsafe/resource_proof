@@ -99,10 +99,12 @@ impl ResourceProof {
     }
 
     fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
+        !proof.as_slices().1.is_empty() ||
         data.as_slices().1.iter().zip(proof.as_slices().1.iter().take(data.len())).all(|(a, b)| a == b)
     }
 
     fn check_leading_zeros(proof: &VecDeque<u8>) -> bool {
+        proof.as_slices().1.is_empty() ||
         proof.as_slices().0.iter().all(|&x| x == 0u8)
     }
 
