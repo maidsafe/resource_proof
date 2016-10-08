@@ -51,13 +51,13 @@
 #![cfg_attr(feature="clippy", deny(clippy))]
 #![cfg_attr(feature="clippy", allow(use_debug))]
 
-extern crate itertools;
+// extern crate itertools;
 extern crate rustc_serialize;
 extern crate tiny_keccak;
 
-use itertools::Itertools;
+// use itertools::Itertools;
 use tiny_keccak::Keccak;
-
+use std::collections::VecDeque;
 
 /// Holds the prover requirements
 #[derive(RustcEncodable, RustcDecodable)]
@@ -79,40 +79,40 @@ impl ResourceProof {
     }
 
     /// Use some data from them and some from you to create a proof.
-    pub fn create_proof(&self, claiment_data: &[u8], reciever_data: &[u8]) -> Vec<u8> {
+    pub fn create_proof(&self, claiment_data: &[u8], reciever_data: &[u8]) -> VecDeque<u8> {
         let mut data = self.create_proof_data(claiment_data, reciever_data);
-        while ResourceProof::leading_zeros(&hash(&data[..])) < self.difficulty as usize {
-            data.push(0u8);
+        while ResourceProof::leading_zeros(&hash(&data.as_slices())) < self.difficulty as usize {
+            data.push_front(0u8);
         }
         data
     }
 
     /// Use some data from them and some from you to confirm a proof.
-    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], proof: &[u8]) -> bool {
+    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], proof: &VecDeque<u8>) -> bool {
         let data = self.create_proof_data(claiment_data, reciever_data);
-        self.check_hash(&proof[..]) && Self::check_proof_data(&data[..], proof) &&
-        Self::check_trailing_zeros(&data[..], proof)
+        self.check_hash(&proof) && Self::check_proof_data(&data, proof) &&
+        Self::check_trailing_zeros(&data, proof)
     }
 
-    fn check_hash(&self, data: &[u8]) -> bool {
-        ResourceProof::leading_zeros(&hash(&data[..])) >= self.difficulty as usize
+    fn check_hash(&self, data: &VecDeque<u8>) -> bool {
+        ResourceProof::leading_zeros(&hash(&data.as_slices())) >= self.difficulty as usize
     }
 
-    fn check_proof_data(data: &[u8], proof: &[u8]) -> bool {
+    fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
         data.iter().zip(proof.iter().take(data.len())).all(|(a, b)| a == b)
     }
 
-    fn check_trailing_zeros(data: &[u8], proof: &[u8]) -> bool {
+    fn check_trailing_zeros(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
         proof.iter().skip(data.len()).all(|&x| x == 0u8)
     }
 
-    fn create_proof_data(&self, claiment_data: &[u8], reciever_data: &[u8]) -> Vec<u8> {
+    fn create_proof_data(&self, claiment_data: &[u8], reciever_data: &[u8]) -> VecDeque<u8> {
         claiment_data.iter()
             .chain(reciever_data.iter())
             .cloned()
             .cycle()
             .take(self.min_size)
-            .collect_vec()
+            .collect()
     }
 
     fn leading_zeros(data: &[u8]) -> usize {
@@ -130,10 +130,11 @@ impl ResourceProof {
     }
 }
 
-/// Simple wrapper around tiny-keccak
-pub fn hash(data: &[u8]) -> [u8; 32] {
+/// Simple wrapper around tiny-keccak for use with deques
+pub fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
     let mut sha3 = Keccak::new_sha3_256();
-    sha3.update(data);
+    sha3.update(data.0);
+    sha3.update(data.1);
     let mut res = [0u8; 32];
     sha3.finalize(&mut res);
     res
