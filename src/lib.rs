@@ -51,16 +51,11 @@
 #![cfg_attr(feature="clippy", deny(clippy))]
 #![cfg_attr(feature="clippy", allow(use_debug))]
 
-// extern crate itertools;
-extern crate rustc_serialize;
 extern crate tiny_keccak;
-
-// use itertools::Itertools;
 use tiny_keccak::Keccak;
 use std::collections::VecDeque;
 
 /// Holds the prover requirements
-#[derive(RustcEncodable, RustcDecodable)]
 pub struct ResourceProof {
     min_size: usize,
     /// minimum size of proof in bytes
