@@ -55,7 +55,7 @@ Some figures on a desktop linux machine are below :
 
 Small data element (36 bytes)
 ```
-cargo run --release --example analyse -- -d 1 -s36   -i
+cargo run --release  -- -d 1 -s36   -i
             Running analysis ....
             Difficulty = 1 size = 36 time to create = 0 seconds time to check = 0  seconds
             Difficulty = 2 size = 36 time to create = 0 seconds time to check = 0  seconds
@@ -80,7 +80,7 @@ cargo run --release --example analyse -- -d 1 -s36   -i
 ```
 Circa 10Mb data
 ```
-cargo run --release --example analyse --  -d=1 -s=102400000 -i
+cargo run --release  --  -d=1 -s=102400000 -i
          Running analysis ....
          Difficulty = 1 size = 102400000 time to create = 2 seconds time to check = 0  seconds
          Difficulty = 2 size = 102400000 time to create = 2 seconds time to check = 0  seconds
@@ -93,6 +93,9 @@ cargo run --release --example analyse --  -d=1 -s=102400000 -i
          Difficulty = 9 size = 102400000 time to create = 338 seconds time to check = 0  seconds
          Difficulty = 10 size = 102400000 time to create = 752 seconds time to check = 0  seconds
          Difficulty = 11 size = 102400000 time to create = 1144 seconds time to check = 0  seconds
+         Difficulty = 12 size = 102400000 time to create = 1146 seconds time to check = 0  seconds
+         Difficulty = 13 size = 102400000 time to create = 1143 seconds time to check = 0  seconds
+         Difficulty = 14 size = 102400000 time to create = 7091 seconds time to check = 0  seconds
 
 ```
 
