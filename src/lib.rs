@@ -79,8 +79,8 @@ impl ResourceProof {
     }
 
     /// Use some data from them and some from you to create a proof.
-    pub fn create_proof(&self, claiment_data: &[u8], reciever_data: &[u8]) -> VecDeque<u8> {
-        let mut data = self.create_proof_data(claiment_data, reciever_data);
+    pub fn create_proof(&self, nonce: &[u8]) -> VecDeque<u8> {
+        let mut data = self.create_proof_data(nonce);
         while ResourceProof::leading_zeros(&hash(&data.as_slices())) < self.difficulty as usize {
             data.push_front(0u8);
         }
@@ -88,10 +88,10 @@ impl ResourceProof {
     }
 
     /// Use some data from them and some from you to confirm a proof.
-    pub fn validate_proof(&self, claiment_data: &[u8], reciever_data: &[u8], proof: &VecDeque<u8>) -> bool {
-        let data = self.create_proof_data(claiment_data, reciever_data);
-        self.check_hash(&proof) && Self::check_proof_data(&data, proof) &&
-        Self::check_trailing_zeros(&data, proof)
+    pub fn validate_proof(&self, nonce: &[u8], proof: &VecDeque<u8>) -> bool {
+        let data = self.create_proof_data(nonce);
+        self.check_hash(&proof)  && Self::check_proof_data(&data, proof) &&
+        Self::check_leading_zeros(proof)
     }
 
     fn check_hash(&self, data: &VecDeque<u8>) -> bool {
@@ -99,16 +99,16 @@ impl ResourceProof {
     }
 
     fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
-        data.iter().zip(proof.iter().take(data.len())).all(|(a, b)| a == b)
+        data.as_slices().1.iter().zip(proof.as_slices().1.iter().take(data.len())).all(|(a, b)| a == b)
     }
 
-    fn check_trailing_zeros(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
-        proof.iter().skip(data.len()).all(|&x| x == 0u8)
+    fn check_leading_zeros(proof: &VecDeque<u8>) -> bool {
+        proof.as_slices().0.iter().all(|&x| x == 0u8)
     }
 
-    fn create_proof_data(&self, claiment_data: &[u8], reciever_data: &[u8]) -> VecDeque<u8> {
-        claiment_data.iter()
-            .chain(reciever_data.iter())
+#[allow(unused)]
+    fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
+        nonce.iter()
             .cloned()
             .cycle()
             .take(self.min_size)
@@ -146,46 +146,41 @@ mod tests {
 
     #[test]
     fn min_data_size() {
-        let a = [1, 2, 3];
-        let b = [3, 4, 5];
+        let nonce = [1, 2, 3];
         let proof = ResourceProof::new(1024, 3);
-        assert!(proof.create_proof_data(&a, &b).len() == 1024);
+        assert!(proof.create_proof_data(&nonce).len() == 1024);
     }
 
     #[test]
     fn min_proof_size() {
-        let a = [1, 2, 3];
-        let b = [3, 4, 5];
+        let nonce = [1, 2, 3];
         let proof = ResourceProof::new(1024 * 1024, 3);
-        assert!(proof.create_proof(&a, &b).len() > 1024);
+        assert!(proof.create_proof(&nonce).len() > 1024);
 
     }
 
     #[test]
     fn proof_no_work() {
-        let a = [1, 2, 3];
-        let b = [3, 4, 5];
+        let nonce = [1, 2, 3];
         let proof = ResourceProof::new(1024, 0);
-        assert!(proof.create_proof_data(&a, &b).len() == 1024);
+        assert!(proof.create_proof_data(&nonce).len() == 1024);
     }
 
     #[test]
     fn valid_proof() {
-        let claiment = [1, 5, 3];
-        let receiver = [9, 4, 5];
+        let nonce = [1, 5, 3];
         let rp = ResourceProof::new(1024, 3);
-        // claiment
-        let mut proof = rp.create_proof(&claiment, &receiver);
+        // nonce
+        let mut proof = rp.create_proof(&nonce);
 
-        assert!(rp.check_hash(&proof[..]));
-        assert!(ResourceProof::check_trailing_zeros(&proof[..],
-                                                    &rp.create_proof_data(&claiment, &receiver)));
-        assert!(ResourceProof::check_proof_data(&proof[..],
-                                                &rp.create_proof_data(&claiment, &receiver)));
+        assert!(rp.check_hash(&proof));
+        assert!(ResourceProof::check_leading_zeros(&proof));
+        assert!(ResourceProof::check_proof_data(&proof,
+                                                &rp.create_proof_data(&nonce)));
 
-        assert!(rp.validate_proof(&claiment, &receiver, &proof[..]));
-        proof.push(0u8);
-        assert!(!rp.validate_proof(&claiment, &receiver, &proof[..]));
+        assert!(rp.validate_proof(&nonce, &proof));
+        proof.push_front(0u8);
+        assert!(!rp.validate_proof(&nonce, &proof));
 
     }
 

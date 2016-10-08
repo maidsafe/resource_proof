@@ -8,14 +8,13 @@ use std::time::Instant;
 
 fn test_it(dif: u8, size: usize) {
 
-    let claiment = [4u8; 32];
-    let receiver = [1u8; 32];
+    let nonce = [4u8; 32];
     let create = Instant::now();
     let rp = ResourceProof::new(size, dif);
-    let proof = rp.create_proof(&claiment, &receiver);
+    let proof = rp.create_proof(&nonce);
     let create_time = create.elapsed().as_secs();
     let check = Instant::now();
-    if !rp.validate_proof(&claiment, &receiver, &proof[..]) {
+    if !rp.validate_proof(&nonce, &proof) {
         println!("FAILED TO CONFIRM PROOF - POSSIBLY VIOLATION");
     }
     println!("Difficulty = {} size = {} time to create = {} seconds time to check = {}  \
