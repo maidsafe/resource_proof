@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["humantime"] = [];implementors["antidote"] = [];implementors["regex_syntax"] = [];implementors["mio"] = [];implementors["serde"] = [];implementors["rust_sodium_sys"] = [];implementors["maidsafe_utilities"] = [];
+implementors["antidote"] = [];implementors["humantime"] = [];implementors["regex_syntax"] = [];implementors["mio"] = [];implementors["serde"] = [];implementors["rust_sodium_sys"] = [];implementors["maidsafe_utilities"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
