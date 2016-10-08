@@ -7,7 +7,7 @@ Status](https://travis-ci.org/dirvine/resource_proof.svg?branch=master)](https:/
 
 # Summary
 
-This crate hopes to combining mechanisms that attempt to validate resources on remote machines. This
+This crate hopes to combine mechanisms that attempt to validate resources on remote machines. This
 validation though, is a spot check and also best effort. It is not guaranteed to be accurate over
 time and this consideration must be clear to users of the crate.
 
@@ -18,6 +18,9 @@ The purpose is to provide **some** indication that a machine has **some** capabi
 In decentralised networks where trust is absent a node intending to join has to prove it can meet
 the minimum requirements of the network. These resource requirements are  decided by either the
 network itself (best) or set by the programmer.
+
+In such networks, one must assume the node joining is not running the same software that existing
+nodes are running.
 
 # Current state
 
@@ -73,6 +76,7 @@ cargo run --release --example analyse -- -d 1 -s36   -i
             Difficulty = 17 size = 36 time to create = 122 seconds time to check = 0  seconds
             Difficulty = 18 size = 36 time to create = 122 seconds time to check = 0  seconds
             Difficulty = 19 size = 36 time to create = 123 seconds time to check = 0  seconds
+            Difficulty = 20 size = 36 time to create = 1890 seconds time to check = 0  seconds
 ```
 Circa 10Mb data
 ```
@@ -88,6 +92,8 @@ cargo run --release --example analyse --  -d=1 -s=102400000 -i
          Difficulty = 8 size = 102400000 time to create = 172 seconds time to check = 0  seconds
          Difficulty = 9 size = 102400000 time to create = 338 seconds time to check = 0  seconds
          Difficulty = 10 size = 102400000 time to create = 752 seconds time to check = 0  seconds
+         Difficulty = 11 size = 102400000 time to create = 1144 seconds time to check = 0  seconds
+
 ```
 
 The important point is that checking the proof is very fast and given enough difficulty, creating
