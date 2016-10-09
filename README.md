@@ -30,7 +30,7 @@ the network should use continual monitoring of capability in parallel with these
 At version 0.1.1 this crate carries out some rudimentary checks that requires a node has some
 computing ability and also the ability to transfer a certain amount of data (bandwith check).
 
-Based on a variant of [Hashcash][https://en.wikipedia.org/wiki/Hashcash] with the addition of the
+Based on a variant of [Hashcash](https://en.wikipedia.org/wiki/Hashcash) with the addition of the
 requirement to transfer an amount of data, this library does provide a "proof of work" like
 algorithm. This work requirement forces joining nodes to perform some calculation and data transfer.
 The expected use case is to require the work is done and data transferred within a time duration. It
