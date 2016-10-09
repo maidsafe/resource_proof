@@ -22,10 +22,21 @@ network itself (best) or set by the programmer.
 In such networks, one must assume the node joining is not running the same software that existing
 nodes are running.
 
+Even if nodes offset this proof by using another resource to aid the proof, it's unlikely to help as
+the network should use continual monitoring of capability in parallel with these "spot checks".
+
 # Current state
 
-At version 0.1.1 this crate carries out soem rudimentary checks that requires a node has some
+At version 0.1.1 this crate carries out some rudimentary checks that requires a node has some
 computing ability and also the ability to transfer a certain amount of data (bandwith check).
+
+Based on a variant of [Hashcash][https://en.wikipedia.org/wiki/Hashcash] with the addition of the
+requirement to transfer an amount of data, this library does provide a "proof of work" like
+algorithm. This work requirement forces joining nodes to perform some calculation and data transfer.
+The expected use case is to require the work is done and data transferred within a time duration. It
+is possible to supply two proofs, one to focus on a large amount of work (difficulty) and another to
+focus on a bandwidth requirement (size). These are combined in the API but do not necessarily need
+to be used as a single proof, unless this requirement can be calculated.
 
 The current hashing mechanism used is sha3 (keccak), this provides some requirement on the machine
 to "work" but is not ASIC resistant. This algorithm will likely be upgraded to something like
