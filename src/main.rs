@@ -59,13 +59,12 @@ fn main() {
             .help("Will run continuously, increasing difficulty with every invocation. Note \
                    this will likley not stop in your lifetime :-)"))
         .get_matches();
-    if cfg!(target_os = "unix") {
+    if !cfg!(target_os = "windows") {
         println!("{}", clear::All);
         println!("{}Running analysis ....{}",
                  color::Fg(color::Red),
                  color::Fg(color::Reset));
-    }
-    if cfg!(target_os = "windows") {
+    } else {
         println!("Running analysis ....");
     }
 
