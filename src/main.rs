@@ -1,10 +1,13 @@
 extern crate resource_proof;
 #[macro_use]
 extern crate clap;
+extern crate termion;
 
 use clap::{App, Arg};
 use resource_proof::ResourceProof;
 use std::time::Instant;
+use termion::{clear, color};
+
 
 fn test_it(dif: u8, size: usize) {
 
@@ -54,8 +57,8 @@ fn main() {
             .help("Will run continuously, increasing difficulty with every invocation. Note \
                    this will likley not stop in your lifetime :-)"))
         .get_matches();
-
-    println!("Running analysis ....");
+    println!("{}", clear::All);
+    println!("{}Running analysis ....{}", color::Fg(color::Red), color::Fg(color::Reset));
 
     let repeat = matches.is_present("Increase");
 
