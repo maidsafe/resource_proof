@@ -128,7 +128,7 @@ impl ResourceProof {
 }
 
 /// Simple wrapper around tiny-keccak for use with deques
-pub fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
+fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
     let mut sha3 = Keccak::new_sha3_256();
     sha3.update(data.0);
     sha3.update(data.1);
