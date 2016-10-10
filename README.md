@@ -89,7 +89,7 @@ cargo run --release  -- -d 1 -s36   -i
             Difficulty = 19 size = 36 time to create = 123 seconds time to check = 0  seconds
             Difficulty = 20 size = 36 time to create = 1890 seconds time to check = 0  seconds
 ```
-Circa 10Mb data
+Circa 100Mb data
 ```
 cargo run --release  --  -d=1 -s=102400000 -i
          Running analysis ....
