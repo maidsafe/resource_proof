@@ -30,6 +30,20 @@ fn test_it(dif: u8, size: usize) {
              check.elapsed().as_secs());
 }
 
+#[cfg(not(windows))]
+fn print_red(message: &str) {
+    println!("{}", clear::All);
+    println!("{}{}{}",
+             color::Fg(color::Red),
+             message,
+             color::Fg(color::Reset));
+}
+
+#[cfg(windows)]
+fn print_red(message: &str) {
+    println!("{}", message);
+}
+
 fn main() {
     let matches = App::new("=============================\nSimple Resource Proof \
                             example\n=============================\n")
@@ -59,14 +73,8 @@ fn main() {
             .help("Will run continuously, increasing difficulty with every invocation. Note \
                    this will likley not stop in your lifetime :-)"))
         .get_matches();
-    if cfg!(unix) {
-        println!("{}", clear::All);
-        println!("{}Running analysis ....{}",
-                 color::Fg(color::Red),
-                 color::Fg(color::Reset));
-    } else {
-        println!("Running analysis ....");
-    }
+
+    print_red("Running analysis ....");
 
     let repeat = matches.is_present("Increase");
 

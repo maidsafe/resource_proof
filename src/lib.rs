@@ -52,8 +52,8 @@
 #![cfg_attr(feature="clippy", allow(use_debug))]
 
 extern crate tiny_keccak;
-use tiny_keccak::Keccak;
 use std::collections::VecDeque;
+use tiny_keccak::Keccak;
 
 /// Holds the prover requirements
 pub struct ResourceProof {
@@ -85,7 +85,7 @@ impl ResourceProof {
     /// Use some data from them and some from you to confirm a proof.
     pub fn validate_proof(&self, nonce: &[u8], proof: &VecDeque<u8>) -> bool {
         let data = self.create_proof_data(nonce);
-        self.check_hash(&proof)  && Self::check_proof_data(&data, proof) &&
+        self.check_hash(proof) && Self::check_proof_data(&data, proof) &&
         Self::check_leading_zeros(proof)
     }
 
@@ -95,15 +95,18 @@ impl ResourceProof {
 
     fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
         !proof.as_slices().1.is_empty() ||
-        data.as_slices().1.iter().zip(proof.as_slices().1.iter().take(data.len())).all(|(a, b)| a == b)
+        data.as_slices()
+            .1
+            .iter()
+            .zip(proof.as_slices().1.iter().take(data.len()))
+            .all(|(a, b)| a == b)
     }
 
     fn check_leading_zeros(proof: &VecDeque<u8>) -> bool {
-        proof.as_slices().1.is_empty() ||
-        proof.as_slices().0.iter().all(|&x| x == 0u8)
+        proof.as_slices().1.is_empty() || proof.as_slices().0.iter().all(|&x| x == 0u8)
     }
 
-#[allow(unused)]
+    #[allow(unused)]
     fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
         nonce.iter()
             .cloned()
@@ -120,7 +123,7 @@ impl ResourceProof {
             if i.leading_zeros() == 8 {
                 continue;
             } else {
-              return size;
+                return size;
             }
         }
         size
@@ -172,8 +175,7 @@ mod tests {
 
         assert!(rp.check_hash(&proof));
         assert!(ResourceProof::check_leading_zeros(&proof));
-        assert!(ResourceProof::check_proof_data(&proof,
-                                                &rp.create_proof_data(&nonce)));
+        assert!(ResourceProof::check_proof_data(&proof, &rp.create_proof_data(&nonce)));
 
         assert!(rp.validate_proof(&nonce, &proof));
         proof.push_front(0u8);
