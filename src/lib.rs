@@ -51,6 +51,8 @@
 #![cfg_attr(feature="clippy", deny(clippy))]
 #![cfg_attr(feature="clippy", allow(use_debug))]
 
+#[cfg(test)]
+extern crate rand;
 extern crate tiny_keccak;
 use std::collections::VecDeque;
 use tiny_keccak::Keccak;
@@ -74,36 +76,29 @@ impl ResourceProof {
     }
 
     /// Use some data from them and some from you to create a proof.
-    pub fn create_proof(&self, nonce: &[u8]) -> VecDeque<u8> {
+    pub fn create_proof(&self, nonce: &[u8]) -> u64 {
         let mut data = self.create_proof_data(nonce);
-        data.push_front(0u8); // create both slices in deque
-        while ResourceProof::leading_zeros(&hash(&data.as_slices())) <= self.difficulty as usize {
+        let mut count = 0;
+        data.push_front(255u8);
+        while ResourceProof::leading_zeros(&hash(&data.as_slices())) < self.difficulty as u64 {
             data.push_front(0u8);
+            count += 1;
         }
-        data
+        count as u64
     }
 
     /// Use some data from them and some from you to confirm a proof.
-    pub fn validate_proof(&self, nonce: &[u8], proof: &VecDeque<u8>) -> bool {
-        let data = self.create_proof_data(nonce);
-        self.check_hash(proof) && Self::check_proof_data(&data, proof) &&
-        Self::check_leading_zeros(proof)
+    pub fn validate_proof(&self, nonce: &[u8], claim: u64) -> bool {
+        let mut data = self.create_proof_data(nonce);
+        data.push_front(255u8);
+        for _ in 0..claim {
+            data.push_front(0u8);
+        }
+        self.check_hash(&data)
     }
 
     fn check_hash(&self, data: &VecDeque<u8>) -> bool {
-        ResourceProof::leading_zeros(&hash(&data.as_slices())) >= self.difficulty as usize
-    }
-
-    fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
-        data.as_slices()
-            .1
-            .iter()
-            .zip(proof.as_slices().1.iter().take(data.len()))
-            .all(|(a, b)| a == b)
-    }
-
-    fn check_leading_zeros(proof: &VecDeque<u8>) -> bool {
-        proof.as_slices().1.is_empty() || proof.as_slices().0.iter().all(|&x| x == 0u8)
+        ResourceProof::leading_zeros(&hash(&data.as_slices())) >= self.difficulty as u64
     }
 
     fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
@@ -114,11 +109,11 @@ impl ResourceProof {
             .collect()
     }
 
-    fn leading_zeros(data: &[u8]) -> usize {
-        let mut size = 0;
+    fn leading_zeros(data: &[u8]) -> u64 {
+        let mut size = 0u64;
         for (count, i) in data.iter().rev().enumerate() {
-            size = count * 8;
-            size += i.leading_zeros() as usize;
+            size = count as u64 * 8;
+            size += i.leading_zeros() as u64;
             if i.leading_zeros() == 8 {
                 continue;
             } else {
@@ -141,44 +136,18 @@ fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
 
 #[cfg(test)]
 mod tests {
+    use rand;
     use super::*;
 
-    #[test]
-    fn min_data_size() {
-        let nonce = [1, 2, 3];
-        let proof = ResourceProof::new(1024, 3);
-        assert!(proof.create_proof_data(&nonce).len() == 1024);
-    }
-
-    #[test]
-    fn min_proof_size() {
-        let nonce = [1, 2, 3];
-        let proof = ResourceProof::new(1024 * 1024, 3);
-        assert!(proof.create_proof(&nonce).len() > 1024);
-
-    }
-
-    #[test]
-    fn proof_no_work() {
-        let nonce = [1, 2, 3];
-        let proof = ResourceProof::new(1024, 0);
-        assert!(proof.create_proof_data(&nonce).len() == 1024);
-    }
 
     #[test]
     fn valid_proof() {
-        let nonce = [1, 5, 3];
+        let nonce = [rand::random::<u8>()];
         let rp = ResourceProof::new(1024, 3);
-        // nonce
         let mut proof = rp.create_proof(&nonce);
-
-        assert!(rp.check_hash(&proof));
-        assert!(ResourceProof::check_leading_zeros(&proof));
-        assert!(ResourceProof::check_proof_data(&proof, &rp.create_proof_data(&nonce)));
-
-        assert!(rp.validate_proof(&nonce, &proof));
-        proof.push_front(0u8);
-        assert!(!rp.validate_proof(&nonce, &proof));
+        assert!(rp.validate_proof(&nonce, proof));
+        proof -= 1;
+        assert!(!rp.validate_proof(&nonce, proof));
 
     }
 

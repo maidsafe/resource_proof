@@ -19,10 +19,9 @@ fn test_it(dif: u8, size: usize) {
     let proof = rp.create_proof(&nonce);
     let create_time = create.elapsed().as_secs();
     let check = Instant::now();
-    if !rp.validate_proof(&nonce, &proof) {
+    if !rp.validate_proof(&nonce, proof) {
         println!("FAILED TO CONFIRM PROOF - POSSIBLE VIOLATION");
     }
-    let attempts = proof.as_slices().0.iter().filter(|&x| *x == 0).count();
 
     println!("Difficulty = {} size = {} create = {} seconds check = {} seconds num of attempts = \
               {:?}",
@@ -30,7 +29,7 @@ fn test_it(dif: u8, size: usize) {
              size,
              create_time,
              check.elapsed().as_secs(),
-             attempts);
+             proof);
 }
 
 #[cfg(not(windows))]
