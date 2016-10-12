@@ -106,7 +106,6 @@ impl ResourceProof {
         proof.as_slices().1.is_empty() || proof.as_slices().0.iter().all(|&x| x == 0u8)
     }
 
-    #[allow(unused)]
     fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
         nonce.iter()
             .cloned()
