@@ -17,7 +17,7 @@
 
 //! # Resource proof
 //!
-//! An mechanism to prove resource avaliability of a machine prior to it joining a network. This
+//! A mechanism to prove resource avaliability of a machine prior to it joining a network. This
 //! crate will provide the creation and confirmation algorithms. It is suggested that network
 //! nodes will require minimum resources to confirm the proof, but joining nodes will have a
 //! significantly higher resource requirementto attempt such a joining proof.
