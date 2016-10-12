@@ -76,7 +76,8 @@ impl ResourceProof {
     /// Use some data from them and some from you to create a proof.
     pub fn create_proof(&self, nonce: &[u8]) -> VecDeque<u8> {
         let mut data = self.create_proof_data(nonce);
-        while ResourceProof::leading_zeros(&hash(&data.as_slices())) < self.difficulty as usize {
+        data.push_front(0u8); // create both slices in deque
+        while ResourceProof::leading_zeros(&hash(&data.as_slices())) <= self.difficulty as usize {
             data.push_front(0u8);
         }
         data
@@ -94,7 +95,6 @@ impl ResourceProof {
     }
 
     fn check_proof_data(data: &VecDeque<u8>, proof: &VecDeque<u8>) -> bool {
-        !proof.as_slices().1.is_empty() ||
         data.as_slices()
             .1
             .iter()
@@ -116,7 +116,7 @@ impl ResourceProof {
 
     fn leading_zeros(data: &[u8]) -> usize {
         let mut size = 0;
-        for (count, i) in data.iter().enumerate() {
+        for (count, i) in data.iter().rev().enumerate() {
             size = count * 8;
             size += i.leading_zeros() as usize;
             if i.leading_zeros() == 8 {

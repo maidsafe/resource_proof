@@ -5,15 +5,19 @@ license = "GPL-3.0"
 name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/dirvine/resource_proof"
-version = "0.2.4-pre"
+version = "0.2.5-pre"
 
 [dependencies]
 clap = "~2.14.0"
 tiny-keccak = "~1.1.1"
 
-[target.'cfg(unix)'.dependencies]
-termion = "~1.1.1"
-
 [dependencies.clippy]
 optional = true
 version = "~0.0.86"
+
+[target]
+
+[target."cfg(unix)"]
+
+[target."cfg(unix)".dependencies]
+termion = "~1.1.1"
