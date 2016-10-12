@@ -78,27 +78,25 @@ impl ResourceProof {
     /// Use some data from them and some from you to create a proof.
     pub fn create_proof(&self, nonce: &[u8]) -> u64 {
         let mut data = self.create_proof_data(nonce);
-        let mut count = 0;
-        data.push_front(255u8);
-        while ResourceProof::leading_zeros(&hash(&data.as_slices())) < self.difficulty as u64 {
+        let mut count = 0u64;
+        while self.check_hash(&data) < self.difficulty {
             data.push_front(0u8);
             count += 1;
         }
-        count as u64
+        count
     }
 
     /// Use some data from them and some from you to confirm a proof.
     pub fn validate_proof(&self, nonce: &[u8], claim: u64) -> bool {
         let mut data = self.create_proof_data(nonce);
-        data.push_front(255u8);
         for _ in 0..claim {
             data.push_front(0u8);
         }
-        self.check_hash(&data)
+        self.check_hash(&data) >= self.difficulty
     }
 
-    fn check_hash(&self, data: &VecDeque<u8>) -> bool {
-        ResourceProof::leading_zeros(&hash(&data.as_slices())) >= self.difficulty as u64
+    fn check_hash(&self, data: &VecDeque<u8>) -> u8 {
+        ResourceProof::leading_zeros(&hash(&data.as_slices()))
     }
 
     fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
@@ -109,18 +107,15 @@ impl ResourceProof {
             .collect()
     }
 
-    fn leading_zeros(data: &[u8]) -> u64 {
-        let mut size = 0u64;
-        for (count, i) in data.iter().rev().enumerate() {
-            size = count as u64 * 8;
-            size += i.leading_zeros() as u64;
-            if i.leading_zeros() == 8 {
-                continue;
-            } else {
-                return size;
+    fn leading_zeros(data: &[u8]) -> u8 {
+        let mut zeros = 0u8;
+        for (count, i) in data.iter().enumerate() {
+            zeros = i.leading_zeros() as u8 + (count as u8 * 8);
+            if i.leading_zeros() < 8 {
+                break;
             }
         }
-        size
+        zeros
     }
 }
 
@@ -142,13 +137,12 @@ mod tests {
 
     #[test]
     fn valid_proof() {
-        let nonce = [rand::random::<u8>()];
-        let rp = ResourceProof::new(1024, 3);
-        let mut proof = rp.create_proof(&nonce);
-        assert!(rp.validate_proof(&nonce, proof));
-        proof -= 1;
-        assert!(!rp.validate_proof(&nonce, proof));
-
+        for _ in 0..20 {
+            let nonce = [rand::random::<u8>()];
+            let rp = ResourceProof::new(1024, 3);
+            let proof = rp.create_proof(&nonce);
+            assert!(rp.validate_proof(&nonce, proof));
+        }
     }
 
 }
