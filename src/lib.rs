@@ -75,18 +75,46 @@ impl ResourceProof {
         }
     }
 
-    /// Use some data from them and some from you to create a proof.
-    pub fn create_proof(&self, nonce: &[u8]) -> u64 {
-        let mut data = self.create_proof_data(nonce);
+    /// Requires the proof datato be passed in.
+    pub fn create_proof(&self, data: &mut VecDeque<u8>) -> u64 {
         let mut count = 0u64;
-        while self.check_hash(&data) < self.difficulty {
-            data.push_front(0u8);
+        let ref mut tmp = data.clone();
+        while self.check_hash(&tmp) < self.difficulty {
+            tmp.push_front(0u8);
             count += 1;
         }
         count
     }
 
-    /// Use some data from them and some from you to confirm a proof.
+    /// Create the proof data.
+    pub fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
+        nonce.iter()
+            .cloned()
+            .cycle()
+            .take(self.min_size)
+            .collect()
+    }
+
+    /// validate the data and proof claim (this is the number of zeros to be pushed onto the data)
+    pub fn validate_all(&self, nonce: &[u8], received_data: &VecDeque<u8>, claim: u64) -> bool {
+        let mut data = self.create_proof_data(nonce);
+        if data != *received_data {
+            return false;
+        }
+        for _ in 0..claim {
+            data.push_front(0u8);
+        }
+        self.check_hash(&data) >= self.difficulty
+
+    }
+
+    /// Validate the data only. Useful to confirm the
+    pub fn validate_data(&self, nonce: &[u8], data: &VecDeque<u8>) -> bool {
+        self.create_proof_data(nonce) == *data
+    }
+
+
+    /// Validate the proof claim only.
     pub fn validate_proof(&self, nonce: &[u8], claim: u64) -> bool {
         let mut data = self.create_proof_data(nonce);
         for _ in 0..claim {
@@ -99,13 +127,6 @@ impl ResourceProof {
         ResourceProof::leading_zeros(&hash(&data.as_slices()))
     }
 
-    fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
-        nonce.iter()
-            .cloned()
-            .cycle()
-            .take(self.min_size)
-            .collect()
-    }
 
     fn leading_zeros(data: &[u8]) -> u8 {
         let mut zeros = 0u8;
@@ -140,8 +161,11 @@ mod tests {
         for _ in 0..20 {
             let nonce = [rand::random::<u8>()];
             let rp = ResourceProof::new(1024, 3);
-            let proof = rp.create_proof(&nonce);
+            let ref mut data = rp.create_proof_data(&nonce);
+            let proof = rp.create_proof(data);
             assert!(rp.validate_proof(&nonce, proof));
+            assert!(rp.validate_data(&nonce, data));
+            assert!(rp.validate_all(&nonce, data, proof));
         }
     }
 

@@ -67,49 +67,54 @@ Some figures on a desktop linux machine are below :
 Small data element (36 bytes)
 
 ```
-cargo run --release  -- -d 1 -s36   -i
-            Running analysis ....
-            Difficulty = 1 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 2 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 3 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 4 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 5 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 6 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 7 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 8 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 9 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 10 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 11 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 12 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 13 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 14 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 15 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 16 size = 36 time to create = 0 seconds time to check = 0  seconds
-            Difficulty = 17 size = 36 time to create = 122 seconds time to check = 0  seconds
-            Difficulty = 18 size = 36 time to create = 122 seconds time to check = 0  seconds
-            Difficulty = 19 size = 36 time to create = 123 seconds time to check = 0  seconds
-            Difficulty = 20 size = 36 time to create = 1890 seconds time to check = 0  seconds
+cargo run --release  -- -d 1 -s1024   -i
+Running analysis ....
+Difficulty = 1 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 1
+Difficulty = 2 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4
+Difficulty = 3 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4
+Difficulty = 4 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 19
+Difficulty = 5 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 85
+Difficulty = 6 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 85
+Difficulty = 7 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 85
+Difficulty = 8 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 474
+Difficulty = 9 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 474
+Difficulty = 10 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 474
+Difficulty = 11 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 1017
+Difficulty = 12 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 1017
+Difficulty = 13 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4367
+Difficulty = 14 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4367
+Difficulty = 15 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4367
+Difficulty = 16 size = 1024 create = 0 seconds check = 0 seconds num of attempts = 4367
+Difficulty = 17 size = 1024 create = 155 seconds check = 0 seconds num of attempts = 248184
+Difficulty = 18 size = 1024 create = 154 seconds check = 0 seconds num of attempts = 248184
+Difficulty = 19 size = 1024 create = 1508 seconds check = 0 seconds num of attempts = 787761
+Difficulty = 20 size = 1024 create = 6087 seconds check = 0 seconds num of attempts = 1587092
+
 ```
 
 Circa 100Mb data
 
 ```
 cargo run --release  --  -d=1 -s=102400000 -i
-         Running analysis ....
-         Difficulty = 1 size = 102400000 time to create = 2 seconds time to check = 0  seconds
-         Difficulty = 2 size = 102400000 time to create = 2 seconds time to check = 0  seconds
-         Difficulty = 3 size = 102400000 time to create = 2 seconds time to check = 0  seconds
-         Difficulty = 4 size = 102400000 time to create = 24 seconds time to check = 0  seconds
-         Difficulty = 5 size = 102400000 time to create = 24 seconds time to check = 0  seconds
-         Difficulty = 6 size = 102400000 time to create = 34 seconds time to check = 0  seconds
-         Difficulty = 7 size = 102400000 time to create = 48 seconds time to check = 0  seconds
-         Difficulty = 8 size = 102400000 time to create = 172 seconds time to check = 0  seconds
-         Difficulty = 9 size = 102400000 time to create = 338 seconds time to check = 0  seconds
-         Difficulty = 10 size = 102400000 time to create = 752 seconds time to check = 0  seconds
-         Difficulty = 11 size = 102400000 time to create = 1144 seconds time to check = 0  seconds
-         Difficulty = 12 size = 102400000 time to create = 1146 seconds time to check = 0  seconds
-         Difficulty = 13 size = 102400000 time to create = 1143 seconds time to check = 0  seconds
-         Difficulty = 14 size = 102400000 time to create = 7091 seconds time to check = 0  seconds
+Running analysis ....
+Difficulty = 1 size = 10485760 create = 0 seconds check = 0 seconds num of attempts = 0
+Difficulty = 2 size = 10485760 create = 0 seconds check = 0 seconds num of attempts = 0
+Difficulty = 3 size = 10485760 create = 0 seconds check = 0 seconds num of attempts = 0
+Difficulty = 4 size = 10485760 create = 0 seconds check = 0 seconds num of attempts = 0
+Difficulty = 5 size = 10485760 create = 3 seconds check = 0 seconds num of attempts = 61
+Difficulty = 6 size = 10485760 create = 3 seconds check = 0 seconds num of attempts = 61
+Difficulty = 7 size = 10485760 create = 3 seconds check = 0 seconds num of attempts = 61
+Difficulty = 8 size = 10485760 create = 3 seconds check = 0 seconds num of attempts = 61
+Difficulty = 9 size = 10485760 create = 25 seconds check = 0 seconds num of attempts = 478
+Difficulty = 10 size = 10485760 create = 25 seconds check = 0 seconds num of attempts = 478
+Difficulty = 11 size = 10485760 create = 66 seconds check = 0 seconds num of attempts = 1268
+Difficulty = 12 size = 10485760 create = 210 seconds check = 0 seconds num of attempts = 4032
+Difficulty = 13 size = 10485760 create = 755 seconds check = 0 seconds num of attempts = 14860
+Difficulty = 14 size = 10485760 create = 1039 seconds check = 0 seconds num of attempts = 20484
+Difficulty = 15 size = 10485760 create = 1035 seconds check = 0 seconds num of attempts = 20484
+Difficulty = 16 size = 10485760 create = 1849 seconds check = 0 seconds num of attempts = 36453
+Difficulty = 17 size = 10485760 create = 2594 seconds check = 0 seconds num of attempts = 51130
+
 
 ```
 

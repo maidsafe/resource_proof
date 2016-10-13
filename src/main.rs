@@ -3,6 +3,7 @@ extern crate resource_proof;
 extern crate clap;
 #[cfg(not(windows))]
 extern crate termion;
+extern crate rand;
 
 use clap::{App, Arg};
 use resource_proof::ResourceProof;
@@ -10,17 +11,24 @@ use std::time::Instant;
 #[cfg(not(windows))]
 use termion::{clear, color};
 
+fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
 
-fn test_it(dif: u8, size: usize) {
-
-    let nonce = [4u8; 32];
     let create = Instant::now();
     let rp = ResourceProof::new(size, dif);
-    let proof = rp.create_proof(&nonce);
+    let ref mut data = rp.create_proof_data(&nonce);
+    let proof = rp.create_proof(data);
     let create_time = create.elapsed().as_secs();
     let check = Instant::now();
     if !rp.validate_proof(&nonce, proof) {
         println!("FAILED TO CONFIRM PROOF - POSSIBLE VIOLATION");
+    }
+
+    if !rp.validate_data(&nonce, data) {
+        println!("FAILED TO CONFIRM PROOF DATA - POSSIBLE VIOLATION");
+    }
+
+    if !rp.validate_all(&nonce, data, proof) {
+        println!("FAILED TO CONFIRM PROOF & DATA - POSSIBLE VIOLATION");
     }
 
     println!("Difficulty = {} size = {} create = {} seconds check = {} seconds num of attempts = \
@@ -84,13 +92,15 @@ fn main() {
 
     let size = value_t!(matches, "Size", usize).unwrap_or(10);
 
+    let nonce = [rand::random::<u8>(); 32];
+
     if repeat {
         for i in dif.. {
 
-            test_it(i, size);
+            test_it(i, size, nonce);
         }
     } else {
-        test_it(dif, size);
+        test_it(dif, size, nonce);
     }
 
 }
