@@ -27,7 +27,7 @@ the network should use continual monitoring of capability in parallel with these
 
 # Current state
 
-At version 0.1.1 this crate carries out some rudimentary checks that requires a node has some
+At version 0.2.x this crate carries out some rudimentary checks that requires a node has some
 computing ability and also the ability to transfer a certain amount of data (bandwith check).
 
 Based on a variant of [Hashcash](https://en.wikipedia.org/wiki/Hashcash) with the addition of the
