@@ -152,8 +152,8 @@ fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
 
 #[cfg(test)]
 mod tests {
-    use rand;
     use super::*;
+    use rand;
 
 
     #[test]
