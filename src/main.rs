@@ -9,7 +9,7 @@ use clap::{App, Arg};
 use resource_proof::ResourceProof;
 use std::time::Instant;
 #[cfg(not(windows))]
-use termion::{clear, color};
+use termion::color;
 
 fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
 
@@ -42,7 +42,8 @@ fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
 
 #[cfg(not(windows))]
 fn print_red(message: &str) {
-    println!("{}", clear::All);
+    println!("");
+    println!("");
     println!("{}{}{}",
              color::Fg(color::Red),
              message,
@@ -51,6 +52,8 @@ fn print_red(message: &str) {
 
 #[cfg(windows)]
 fn print_red(message: &str) {
+    println!("");
+    println!("");
     println!("{}", message);
 }
 
