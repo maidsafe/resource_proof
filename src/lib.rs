@@ -17,10 +17,12 @@
 
 //! # Resource proof
 //!
-//! A mechanism to prove resource avaliability of a machine prior to it joining a network. This
-//! crate will provide the creation and confirmation algorithms. It is suggested that network
-//! nodes will require minimum resources to confirm the proof, but joining nodes will have a
-//! significantly higher resource requirementto attempt such a joining proof.
+//! A mechanism to test resource avaliability (CPU and bandwidth) of a machine prior to it joining
+//! a network. This crate provides the creation and validation algorithms.
+//!
+//! Validation has some CPU and memory requirements but far less than proof creation. Bandwidth
+//! tests (data transfer) affect the machine being proved and the machine doing validation equally;
+//! it is suggested that multiple machines test any new machine to apply an asymmetric load.
 //!
 //! [Github repository](https://github.com/dirvine/resource_proof)
 
@@ -66,8 +68,13 @@ pub struct ResourceProof {
 
 
 impl ResourceProof {
-    /// Rounds will factor how large the message to send is. It also has a slight impact on the
-    /// hash power required, but this is minimal.
+    /// Configure a new prover.
+    ///
+    /// `min_size` is target data size in bytes. It may be small or large to test bandwidth
+    /// (although it may be compressible).
+    ///
+    /// `difficulty` is the number of leading binary zeros required in the hash. Each extra zero
+    /// doubles the difficulty.
     pub fn new(min_size: usize, difficulty: u8) -> ResourceProof {
         ResourceProof {
             min_size: min_size,
@@ -75,7 +82,17 @@ impl ResourceProof {
         }
     }
 
-    /// Requires the proof datato be passed in.
+    /// Create the proof data with a given nonce.
+    pub fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
+        nonce
+            .iter()
+            .cloned()
+            .cycle()
+            .take(self.min_size)
+            .collect()
+    }
+
+    /// Create the proof key. Requires the data (from `create_proof_data`) to be passed in.
     pub fn create_proof(&self, data: &mut VecDeque<u8>) -> u64 {
         let mut count = 0u64;
         let ref mut tmp = data.clone();
@@ -86,38 +103,28 @@ impl ResourceProof {
         count
     }
 
-    /// Create the proof data.
-    pub fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
-        nonce.iter()
-            .cloned()
-            .cycle()
-            .take(self.min_size)
-            .collect()
-    }
-
-    /// validate the data and proof claim (this is the number of zeros to be pushed onto the data)
-    pub fn validate_all(&self, nonce: &[u8], received_data: &VecDeque<u8>, claim: u64) -> bool {
+    /// Validate the proof data and key (this is the number of zeros to be pushed onto the data).
+    pub fn validate_all(&self, nonce: &[u8], received_data: &VecDeque<u8>, key: u64) -> bool {
         let mut data = self.create_proof_data(nonce);
         if data != *received_data {
             return false;
         }
-        for _ in 0..claim {
+        for _ in 0..key {
             data.push_front(0u8);
         }
         self.check_hash(&data) >= self.difficulty
-
     }
 
-    /// Validate the data only. Useful to confirm the
+    /// Validate the data for the given `nonce` and size data.
     pub fn validate_data(&self, nonce: &[u8], data: &VecDeque<u8>) -> bool {
         self.create_proof_data(nonce) == *data
     }
 
-
-    /// Validate the proof claim only.
-    pub fn validate_proof(&self, nonce: &[u8], claim: u64) -> bool {
+    /// Validate the proof key (this must recreate the data, hence `validate_all` is faster when
+    /// both must be checked).
+    pub fn validate_proof(&self, nonce: &[u8], key: u64) -> bool {
         let mut data = self.create_proof_data(nonce);
-        for _ in 0..claim {
+        for _ in 0..key {
             data.push_front(0u8);
         }
         self.check_hash(&data) >= self.difficulty
@@ -126,7 +133,6 @@ impl ResourceProof {
     fn check_hash(&self, data: &VecDeque<u8>) -> u8 {
         ResourceProof::leading_zeros(&hash(&data.as_slices()))
     }
-
 
     fn leading_zeros(data: &[u8]) -> u8 {
         let mut zeros = 0u8;
@@ -168,5 +174,4 @@ mod tests {
             assert!(rp.validate_all(&nonce, data, proof));
         }
     }
-
 }
