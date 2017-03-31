@@ -84,15 +84,14 @@ impl ResourceProof {
             .collect()
     }
 
-    /// Create the proof key. Requires the data (from `create_proof_data`) to be passed in.
-    pub fn create_proof(&self, data: &mut VecDeque<u8>) -> u64 {
-        let mut count = 0u64;
-        let tmp = &mut data.clone();
-        while self.check_hash(tmp) < self.difficulty {
-            tmp.push_front(0u8);
-            count += 1;
+    /// Create a prover object. Requires a copy of the data (from `create_proof_data`) to be
+    /// passed in.
+    pub fn create_prover(&self, data: VecDeque<u8>) -> ResourceProver {
+        ResourceProver {
+            difficulty: self.difficulty,
+            count: 0,
+            data: data,
         }
-        count
     }
 
     /// Validate the proof data and key (this is the number of zeros to be pushed onto the data).
@@ -138,6 +137,53 @@ impl ResourceProof {
     }
 }
 
+
+/// Object used to compute a result
+pub struct ResourceProver {
+    difficulty: u8,
+    count: u64,
+    data: VecDeque<u8>,
+}
+
+impl ResourceProver {
+    /// The expected number of steps is `pow(2, difficulty)`.
+    /// The process is probabilistic, so the actual number of steps required may be more or less.
+    ///
+    /// The length of each step depends on data size. Total expected time is proportional to
+    /// `length * pow(2, difficulty)`.
+    pub fn expected_steps(&self) -> u64 {
+        2u64.pow(self.difficulty as u32)
+    }
+
+    /// Try one step; if successful return the proof result.
+    ///
+    /// (This does not invalidate the prover. Continuing might find another valid solution.)
+    pub fn try_step(&mut self) -> Option<u64> {
+        if self.check_hash() >= self.difficulty {
+            return Some(self.count);
+        }
+
+        self.data.push_front(0u8);
+        self.count += 1;
+        None
+    }
+
+    /// Keep stepping until a solution is found. Expected time can be calculated roughly (see
+    /// `expected_steps`) but there is no upper bound (besides `u64::MAX`).
+    pub fn solve(&mut self) -> u64 {
+        loop {
+            if let Some(solution) = self.try_step() {
+                return solution;
+            }
+        }
+    }
+
+    fn check_hash(&self) -> u8 {
+        ResourceProof::leading_zeros(&hash(&self.data.as_slices()))
+    }
+}
+
+
 /// Simple wrapper around tiny-keccak for use with deques
 fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
     let mut sha3 = Keccak::new_sha3_256();
@@ -159,11 +205,11 @@ mod tests {
         for _ in 0..20 {
             let nonce = [rand::random::<u8>()];
             let rp = ResourceProof::new(1024, 3);
-            let data = &mut rp.create_proof_data(&nonce);
-            let proof = rp.create_proof(data);
+            let data = rp.create_proof_data(&nonce);
+            let proof = rp.create_prover(data.clone()).solve();
             assert!(rp.validate_proof(&nonce, proof));
-            assert!(rp.validate_data(&nonce, data));
-            assert!(rp.validate_all(&nonce, data, proof));
+            assert!(rp.validate_data(&nonce, &data));
+            assert!(rp.validate_all(&nonce, &data, proof));
         }
     }
 }

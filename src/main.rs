@@ -47,25 +47,28 @@ use termion::color;
 fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
     let create = Instant::now();
     let rp = ResourceProof::new(size, dif);
-    let data = &mut rp.create_proof_data(&nonce);
-    let proof = rp.create_proof(data);
+    let data = rp.create_proof_data(&nonce);
+    let mut prover = rp.create_prover(data.clone());
+    let expected_steps = prover.expected_steps();
+    let proof = prover.solve();
     let create_time = create.elapsed().as_secs();
     let check = Instant::now();
     if !rp.validate_proof(&nonce, proof) {
         println!("FAILED TO CONFIRM PROOF - POSSIBLE VIOLATION");
     }
 
-    if !rp.validate_data(&nonce, data) {
+    if !rp.validate_data(&nonce, &data) {
         println!("FAILED TO CONFIRM PROOF DATA - POSSIBLE VIOLATION");
     }
 
-    if !rp.validate_all(&nonce, data, proof) {
+    if !rp.validate_all(&nonce, &data, proof) {
         println!("FAILED TO CONFIRM PROOF & DATA - POSSIBLE VIOLATION");
     }
 
-    println!("Difficulty = {} size = {} create = {} seconds check = {} seconds num of attempts = \
-              {:?}",
+    println!("Difficulty = {} expected_steps = {} size = {} create = {} seconds check = {} \
+              seconds num of steps = {:?}",
              dif,
+             expected_steps,
              size,
              create_time,
              check.elapsed().as_secs(),
