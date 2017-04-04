@@ -1,12 +1,12 @@
-// Copyright 2015 MaidSafe.net limited.
+// Copyright 2017 MaidSafe.net limited.
 //
 // This SAFE Network Software is licensed to you under (1) the MaidSafe.net Commercial License,
 // version 1.0 or later, or (2) The General Public License (GPL), version 3, depending on which
 // licence you accepted on initial access to the Software (the "Licences").
 //
 // By contributing code to the SAFE Network Software, or to this project generally, you agree to be
-// bound by the terms of the MaidSafe Contributor Agreement, version 1.0 This, along with the
-// Licenses can be found in the root directory of this project at LICENSE, COPYING and CONTRIBUTOR.
+// bound by the terms of the MaidSafe Contributor Agreement.  This, along with the Licenses can be
+// found in the root directory of this project at LICENSE, COPYING and CONTRIBUTOR.
 //
 // Unless required by applicable law or agreed to in writing, the SAFE Network Software distributed
 // under the GPL Licence is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,21 +17,19 @@
 
 //! # Resource proof
 //!
-//! A mechanism to test resource avaliability (CPU and bandwidth) of a machine prior to it joining
+//! A mechanism to test resource availability (CPU and bandwidth) of a machine prior to it joining
 //! a network. This crate provides the creation and validation algorithms.
 //!
 //! Validation has some CPU and memory requirements but far less than proof creation. Bandwidth
 //! tests (data transfer) affect the machine being proved and the machine doing validation equally;
 //! it is suggested that multiple machines test any new machine to apply an asymmetric load.
 //!
-//! [Github repository](https://github.com/dirvine/resource_proof)
-
-
+//! [GitHub repository](https://github.com/maidsafe/resource_proof)
 
 #![doc(html_logo_url =
            "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
-       html_favicon_url = "http://maidsafe.net/img/favicon.ico",
-       html_root_url = "http://dirvine.github.io/resource_proof")]
+       html_favicon_url = "https://maidsafe.net/img/favicon.ico",
+       html_root_url = "https://docs.rs/resource_proof")]
 
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
@@ -46,12 +44,6 @@
         unused_qualifications, unused_results)]
 #![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
          missing_debug_implementations, variant_size_differences)]
-
-
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
-#![cfg_attr(feature="clippy", deny(clippy))]
-#![cfg_attr(feature="clippy", allow(use_debug))]
 
 #[cfg(test)]
 extern crate rand;
@@ -95,8 +87,8 @@ impl ResourceProof {
     /// Create the proof key. Requires the data (from `create_proof_data`) to be passed in.
     pub fn create_proof(&self, data: &mut VecDeque<u8>) -> u64 {
         let mut count = 0u64;
-        let ref mut tmp = data.clone();
-        while self.check_hash(&tmp) < self.difficulty {
+        let tmp = &mut data.clone();
+        while self.check_hash(tmp) < self.difficulty {
             tmp.push_front(0u8);
             count += 1;
         }
@@ -167,7 +159,7 @@ mod tests {
         for _ in 0..20 {
             let nonce = [rand::random::<u8>()];
             let rp = ResourceProof::new(1024, 3);
-            let ref mut data = rp.create_proof_data(&nonce);
+            let data = &mut rp.create_proof_data(&nonce);
             let proof = rp.create_proof(data);
             assert!(rp.validate_proof(&nonce, proof));
             assert!(rp.validate_data(&nonce, data));

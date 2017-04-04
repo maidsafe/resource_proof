@@ -1,11 +1,15 @@
-# Resource Proof
+# resource_proof
 
-[![Build
-status](https://ci.appveyor.com/api/projects/status/fcpgnw8kya193w87?svg=true)](https://ci.appveyor.com/project/dirvine/resource-proof)
-[![Build
-Status](https://travis-ci.org/dirvine/resource_proof.svg?branch=master)](https://travis-ci.org/dirvine/resource_proof)
+**Maintainer:** David Irvine (david.irvine@maidsafe.net)
 
-# Summary
+|Crate|Documentation|Linux/OS X|Windows|Issues|
+|:---:|:-----------:|:--------:|:-----:|:----:|
+|[![](http://meritbadge.herokuapp.com/resource_proof)](https://crates.io/crates/resource_proof)|[![Documentation](https://docs.rs/resource_proof/badge.svg)](https://docs.rs/resource_proof)|[![Build Status](https://travis-ci.org/maidsafe/resource_proof.svg?branch=master)](https://travis-ci.org/maidsafe/resource_proof)|[![Build status](https://ci.appveyor.com/api/projects/status/yurq5amiwiunlv7w/branch/master?svg=true)](https://ci.appveyor.com/project/MaidSafe-QA/resource-proof/branch/master)|[![Stories in Ready](https://badge.waffle.io/maidsafe/resource_proof.png?label=ready&title=Ready)](https://waffle.io/maidsafe/resource_proof)|
+
+| [MaidSafe website](https://maidsafe.net) | [SAFE Dev Forum](https://forum.safedev.org) | [SAFE Network Forum](https://safenetforum.org) |
+|:----------------------------------------:|:-------------------------------------------:|:----------------------------------------------:|
+
+## Summary
 
 This crate hopes to combine mechanisms that attempt to validate resources on remote machines. This
 validation though, is a spot check and also best effort. It is not guaranteed to be accurate over
@@ -13,7 +17,7 @@ time and this consideration must be clear to users of the crate.
 
 The purpose is to provide **some** indication that a machine has **some** capabilities.
 
-# Motivation
+## Motivation
 
 In decentralised networks where trust is absent a node intending to join has to prove it can meet
 the minimum requirements of the network. These resource requirements are  decided by either the
@@ -25,7 +29,7 @@ nodes are running.
 Even if nodes offset this proof by using another resource to aid the proof, it's unlikely to help as
 the network should use continual monitoring of capability in parallel with these "spot checks".
 
-# Current state
+## Current state
 
 At version 0.2.x this crate carries out some rudimentary checks that requires a node has some
 computing ability and also the ability to transfer a certain amount of data (bandwith check).
@@ -46,7 +50,7 @@ the memory requirements of a node (this is not measured in this crate yet).
 
 Disk space measurements may  also be added in future.
 
-# Analysis
+## Analysis
 
 There is an example to test any values and allow measurements on different architectures. This can
 be run as
@@ -58,7 +62,7 @@ bits of the hash of the data are zero. Similar to a common proof of work algorit
 The size parameter forces the nonce provided to be repeated until it reaches a certain size in
 bytes. This is then transferred back to the network as a proof.
 
-To find the proof the node must continaully push a zero to the beginning of the data (not at the end
+To find the proof the node must continually push a zero to the beginning of the data (not at the end
 as this is easily optimised). This forces the continuous reading of a large data segment in each
 hash iteration.
 
@@ -89,7 +93,6 @@ Difficulty = 17 size = 1024 create = 155 seconds check = 0 seconds num of attemp
 Difficulty = 18 size = 1024 create = 154 seconds check = 0 seconds num of attempts = 248184
 Difficulty = 19 size = 1024 create = 1508 seconds check = 0 seconds num of attempts = 787761
 Difficulty = 20 size = 1024 create = 6087 seconds check = 0 seconds num of attempts = 1587092
-
 ```
 
 Circa 100Mb data
@@ -114,8 +117,6 @@ Difficulty = 14 size = 10485760 create = 1039 seconds check = 0 seconds num of a
 Difficulty = 15 size = 10485760 create = 1035 seconds check = 0 seconds num of attempts = 20484
 Difficulty = 16 size = 10485760 create = 1849 seconds check = 0 seconds num of attempts = 36453
 Difficulty = 17 size = 10485760 create = 2594 seconds check = 0 seconds num of attempts = 51130
-
-
 ```
 
 The important point is that checking the proof is very fast and given enough difficulty, creating
@@ -136,6 +137,5 @@ at your option.
 ## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the
-work by you, as defined in the MaidSafe Contributor Agreement, version 1.1 ([CONTRIBUTOR]
-(CONTRIBUTOR)), shall be dual licensed as above, and you agree to be bound by the terms of the
-MaidSafe Contributor Agreement, version 1.1.
+work by you, as defined in the MaidSafe Contributor Agreement ([CONTRIBUTOR](CONTRIBUTOR)), shall be
+dual licensed as above, and you agree to be bound by the terms of the MaidSafe Contributor Agreement.
