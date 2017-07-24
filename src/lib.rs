@@ -76,12 +76,7 @@ impl ResourceProof {
 
     /// Create the proof data with a given nonce.
     pub fn create_proof_data(&self, nonce: &[u8]) -> VecDeque<u8> {
-        nonce
-            .iter()
-            .cloned()
-            .cycle()
-            .take(self.min_size)
-            .collect()
+        nonce.iter().cloned().cycle().take(self.min_size).collect()
     }
 
     /// Create a prover object. Requires a copy of the data (from `create_proof_data`) to be
