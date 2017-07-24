@@ -65,24 +65,28 @@ fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
         println!("FAILED TO CONFIRM PROOF & DATA - POSSIBLE VIOLATION");
     }
 
-    println!("Difficulty = {} expected_steps = {} size = {} create = {} seconds check = {} \
+    println!(
+        "Difficulty = {} expected_steps = {} size = {} create = {} seconds check = {} \
               seconds num of steps = {:?}",
-             dif,
-             expected_steps,
-             size,
-             create_time,
-             check.elapsed().as_secs(),
-             proof);
+        dif,
+        expected_steps,
+        size,
+        create_time,
+        check.elapsed().as_secs(),
+        proof
+    );
 }
 
 #[cfg(not(windows))]
 fn print_red(message: &str) {
     println!("");
     println!("");
-    println!("{}{}{}",
-             color::Fg(color::Red),
-             message,
-             color::Fg(color::Reset));
+    println!(
+        "{}{}{}",
+        color::Fg(color::Red),
+        message,
+        color::Fg(color::Reset)
+    );
 }
 
 #[cfg(windows)]
@@ -93,33 +97,45 @@ fn print_red(message: &str) {
 }
 
 fn main() {
-    let matches = App::new("=============================\nSimple Resource Proof \
-                            example\n=============================\n")
-        .about("______________________________\nPlease set the size and difficulty to test")
+    let matches = App::new(
+        "=============================\nSimple Resource Proof \
+                            example\n=============================\n",
+    ).about(
+        "______________________________\nPlease set the size and difficulty to test",
+    )
         .author(crate_authors!())
         .version(crate_version!())
         .before_help("Resource proof testing framework")
-        .after_help("_____________________________________________________________\nSeveral \
+        .after_help(
+            "_____________________________________________________________\nSeveral \
                      proofs may be chained, i.e. a large difficulty and small size or large size \
-                     and small difficulty to check specifically CPU And BW seperately")
-        .arg(Arg::with_name("Difficulty")
-            .short("d")
-            .required(true)
-            .long("difficulty")
-            .help("Set difficulty, i.e. the number of leading zeros of the proof when hashed \
-                   with SHA3")
-            .takes_value(true))
-        .arg(Arg::with_name("Size")
-            .required(true)
-            .short("s")
-            .long("size")
-            .help("Set size, i.e. the minimum size of the proof in bytes")
-            .takes_value(true))
-        .arg(Arg::with_name("Increase")
-            .short("i")
-            .long("increase")
-            .help("Will run continuously, increasing difficulty with every invocation. Note \
-                   this will likley not stop in your lifetime :-)"))
+                     and small difficulty to check specifically CPU And BW seperately",
+        )
+        .arg(
+            Arg::with_name("Difficulty")
+                .short("d")
+                .required(true)
+                .long("difficulty")
+                .help(
+                    "Set difficulty, i.e. the number of leading zeros of the proof when hashed \
+                   with SHA3",
+                )
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("Size")
+                .required(true)
+                .short("s")
+                .long("size")
+                .help("Set size, i.e. the minimum size of the proof in bytes")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("Increase").short("i").long("increase").help(
+                "Will run continuously, increasing difficulty with every invocation. Note \
+                   this will likley not stop in your lifetime :-)",
+            ),
+        )
         .get_matches();
 
     print_red("Running analysis ....");
