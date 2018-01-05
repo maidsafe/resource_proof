@@ -42,8 +42,8 @@
         while_true)]
 #![warn(trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results)]
-#![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
-         missing_debug_implementations, variant_size_differences)]
+#![allow(box_pointers, missing_copy_implementations, missing_debug_implementations,
+         variant_size_differences)]
 
 #[cfg(test)]
 extern crate rand;
@@ -147,7 +147,7 @@ impl ResourceProver {
     /// The length of each step depends on data size. Total expected time is proportional to
     /// `length * pow(2, difficulty)`.
     pub fn expected_steps(&self) -> u64 {
-        2u64.pow(self.difficulty as u32)
+        2u64.pow(u32::from(self.difficulty))
     }
 
     /// Try one step; if successful return the proof result.

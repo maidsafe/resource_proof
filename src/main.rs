@@ -28,8 +28,8 @@
         while_true)]
 #![warn(trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results)]
-#![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
-         missing_debug_implementations, variant_size_differences)]
+#![allow(box_pointers, missing_copy_implementations, missing_debug_implementations,
+         variant_size_differences)]
 
 extern crate resource_proof;
 #[macro_use]
@@ -67,7 +67,7 @@ fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
 
     println!(
         "Difficulty = {} expected_steps = {} size = {} create = {} seconds check = {} \
-              seconds num of steps = {:?}",
+         seconds num of steps = {:?}",
         dif,
         expected_steps,
         size,
@@ -79,8 +79,8 @@ fn test_it(dif: u8, size: usize, nonce: [u8; 32]) {
 
 #[cfg(not(windows))]
 fn print_red(message: &str) {
-    println!("");
-    println!("");
+    println!();
+    println!();
     println!(
         "{}{}{}",
         color::Fg(color::Red),
@@ -91,15 +91,15 @@ fn print_red(message: &str) {
 
 #[cfg(windows)]
 fn print_red(message: &str) {
-    println!("");
-    println!("");
+    println!();
+    println!();
     println!("{}", message);
 }
 
 fn main() {
     let matches = App::new(
         "=============================\nSimple Resource Proof \
-                            example\n=============================\n",
+         example\n=============================\n",
     ).about(
         "______________________________\nPlease set the size and difficulty to test",
     )
@@ -108,8 +108,8 @@ fn main() {
         .before_help("Resource proof testing framework")
         .after_help(
             "_____________________________________________________________\nSeveral \
-                     proofs may be chained, i.e. a large difficulty and small size or large size \
-                     and small difficulty to check specifically CPU And BW seperately",
+             proofs may be chained, i.e. a large difficulty and small size or large size \
+             and small difficulty to check specifically CPU And BW seperately",
         )
         .arg(
             Arg::with_name("Difficulty")
@@ -118,7 +118,7 @@ fn main() {
                 .long("difficulty")
                 .help(
                     "Set difficulty, i.e. the number of leading zeros of the proof when hashed \
-                   with SHA3",
+                     with SHA3",
                 )
                 .takes_value(true),
         )
@@ -133,7 +133,7 @@ fn main() {
         .arg(
             Arg::with_name("Increase").short("i").long("increase").help(
                 "Will run continuously, increasing difficulty with every invocation. Note \
-                   this will likley not stop in your lifetime :-)",
+                 this will likley not stop in your lifetime :-)",
             ),
         )
         .get_matches();
@@ -150,7 +150,6 @@ fn main() {
 
     if repeat {
         for i in dif.. {
-
             test_it(i, size, nonce);
         }
     } else {
