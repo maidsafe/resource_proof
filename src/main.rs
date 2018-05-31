@@ -11,24 +11,31 @@
 
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
-#![forbid(bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items,
-          unknown_crate_types, warnings)]
-#![deny(deprecated, improper_ctypes, missing_docs, non_shorthand_field_patterns,
-        overflowing_literals, plugin_as_library, private_no_mangle_fns, private_no_mangle_statics,
-        stable_features, unconditional_recursion, unknown_lints, unsafe_code, unused,
-        unused_allocation, unused_attributes, unused_comparisons, unused_features, unused_parens,
-        while_true)]
-#![warn(trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
-#![allow(box_pointers, missing_copy_implementations, missing_debug_implementations,
-         variant_size_differences)]
+#![forbid(
+    bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items, unknown_crate_types,
+    warnings
+)]
+#![deny(
+    deprecated, improper_ctypes, missing_docs, non_shorthand_field_patterns, overflowing_literals,
+    plugin_as_library, private_no_mangle_fns, private_no_mangle_statics, stable_features,
+    unconditional_recursion, unknown_lints, unsafe_code, unused, unused_allocation,
+    unused_attributes, unused_comparisons, unused_features, unused_parens, while_true
+)]
+#![warn(
+    trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
+    unused_qualifications, unused_results
+)]
+#![allow(
+    box_pointers, missing_copy_implementations, missing_debug_implementations,
+    variant_size_differences
+)]
 
 extern crate resource_proof;
 #[macro_use]
 extern crate clap;
+extern crate rand;
 #[cfg(not(windows))]
 extern crate termion;
-extern crate rand;
 
 use clap::{App, Arg};
 use resource_proof::ResourceProof;
@@ -122,12 +129,10 @@ fn main() {
                 .help("Set size, i.e. the minimum size of the proof in bytes")
                 .takes_value(true),
         )
-        .arg(
-            Arg::with_name("Increase").short("i").long("increase").help(
-                "Will run continuously, increasing difficulty with every invocation. Note \
-                 this will likley not stop in your lifetime :-)",
-            ),
-        )
+        .arg(Arg::with_name("Increase").short("i").long("increase").help(
+            "Will run continuously, increasing difficulty with every invocation. Note \
+             this will likley not stop in your lifetime :-)",
+        ))
         .get_matches();
 
     print_red("Running analysis ....");
@@ -147,5 +152,4 @@ fn main() {
     } else {
         test_it(dif, size, nonce);
     }
-
 }

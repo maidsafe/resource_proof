@@ -18,24 +18,31 @@
 //!
 //! [GitHub repository](https://github.com/maidsafe/resource_proof)
 
-#![doc(html_logo_url =
-           "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
-       html_favicon_url = "https://maidsafe.net/img/favicon.ico",
-       html_root_url = "https://docs.rs/resource_proof")]
-
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
+    html_favicon_url = "https://maidsafe.net/img/favicon.ico",
+    html_root_url = "https://docs.rs/resource_proof"
+)]
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
-#![forbid(bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items,
-          unknown_crate_types, warnings)]
-#![deny(deprecated, improper_ctypes, missing_docs, non_shorthand_field_patterns,
-        overflowing_literals, plugin_as_library, private_no_mangle_fns, private_no_mangle_statics,
-        stable_features, unconditional_recursion, unknown_lints, unsafe_code, unused,
-        unused_allocation, unused_attributes, unused_comparisons, unused_features, unused_parens,
-        while_true)]
-#![warn(trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
-#![allow(box_pointers, missing_copy_implementations, missing_debug_implementations,
-         variant_size_differences)]
+#![forbid(
+    bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items, unknown_crate_types,
+    warnings
+)]
+#![deny(
+    deprecated, improper_ctypes, missing_docs, non_shorthand_field_patterns, overflowing_literals,
+    plugin_as_library, private_no_mangle_fns, private_no_mangle_statics, stable_features,
+    unconditional_recursion, unknown_lints, unsafe_code, unused, unused_allocation,
+    unused_attributes, unused_comparisons, unused_features, unused_parens, while_true
+)]
+#![warn(
+    trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
+    unused_qualifications, unused_results
+)]
+#![allow(
+    box_pointers, missing_copy_implementations, missing_debug_implementations,
+    variant_size_differences
+)]
 
 #[cfg(test)]
 extern crate rand;
@@ -49,7 +56,6 @@ pub struct ResourceProof {
     /// minimum size of proof in bytes
     difficulty: u8,
 }
-
 
 impl ResourceProof {
     /// Configure a new prover.
@@ -124,7 +130,6 @@ impl ResourceProof {
     }
 }
 
-
 /// Object used to compute a result
 pub struct ResourceProver {
     difficulty: u8,
@@ -170,7 +175,6 @@ impl ResourceProver {
     }
 }
 
-
 /// Simple wrapper around tiny-keccak for use with deques
 fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
     let mut sha3 = Keccak::new_sha3_256();
@@ -185,7 +189,6 @@ fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
 mod tests {
     use super::*;
     use rand;
-
 
     #[test]
     fn valid_proof() {
