@@ -61,8 +61,8 @@ impl ResourceProof {
     /// doubles the difficulty.
     pub fn new(min_size: usize, difficulty: u8) -> ResourceProof {
         ResourceProof {
-            min_size: min_size,
-            difficulty: difficulty,
+            min_size,
+            difficulty,
         }
     }
 
@@ -77,7 +77,7 @@ impl ResourceProof {
         ResourceProver {
             difficulty: self.difficulty,
             count: 0,
-            data: data,
+            data,
         }
     }
 
