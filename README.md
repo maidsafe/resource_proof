@@ -1,7 +1,5 @@
 # resource_proof
 
-**Maintainer:** David Irvine (david.irvine@maidsafe.net)
-
 |Crate|Documentation|Linux/OS X|Windows|Issues|
 |:---:|:-----------:|:--------:|:-----:|:----:|
 |[![](http://meritbadge.herokuapp.com/resource_proof)](https://crates.io/crates/resource_proof)|[![Documentation](https://docs.rs/resource_proof/badge.svg)](https://docs.rs/resource_proof)|[![Build Status](https://travis-ci.org/maidsafe/resource_proof.svg?branch=master)](https://travis-ci.org/maidsafe/resource_proof)|[![Build status](https://ci.appveyor.com/api/projects/status/yurq5amiwiunlv7w/branch/master?svg=true)](https://ci.appveyor.com/project/MaidSafe-QA/resource-proof/branch/master)|[![Stories in Ready](https://badge.waffle.io/maidsafe/resource_proof.png?label=ready&title=Ready)](https://waffle.io/maidsafe/resource_proof)|
