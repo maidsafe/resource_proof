@@ -26,8 +26,6 @@
     non_shorthand_field_patterns,
     overflowing_literals,
     plugin_as_library,
-    private_no_mangle_fns,
-    private_no_mangle_statics,
     stable_features,
     unconditional_recursion,
     unknown_lints,
@@ -124,7 +122,8 @@ fn main() {
     let matches = App::new(
         "=============================\nSimple Resource Proof \
          example\n=============================\n",
-    ).about("______________________________\nPlease set the size and difficulty to test")
+    )
+    .about("______________________________\nPlease set the size and difficulty to test")
     .author(crate_authors!())
     .version(crate_version!())
     .before_help("Resource proof testing framework")
@@ -132,7 +131,8 @@ fn main() {
         "_____________________________________________________________\nSeveral \
          proofs may be chained, i.e. a large difficulty and small size or large size \
          and small difficulty to check specifically CPU And BW seperately",
-    ).arg(
+    )
+    .arg(
         Arg::with_name("Difficulty")
             .short("d")
             .required(true)
@@ -140,18 +140,22 @@ fn main() {
             .help(
                 "Set difficulty, i.e. the number of leading zeros of the proof when hashed \
                  with SHA3",
-            ).takes_value(true),
-    ).arg(
+            )
+            .takes_value(true),
+    )
+    .arg(
         Arg::with_name("Size")
             .required(true)
             .short("s")
             .long("size")
             .help("Set size, i.e. the minimum size of the proof in bytes")
             .takes_value(true),
-    ).arg(Arg::with_name("Increase").short("i").long("increase").help(
+    )
+    .arg(Arg::with_name("Increase").short("i").long("increase").help(
         "Will run continuously, increasing difficulty with every invocation. Note \
          this will likley not stop in your lifetime :-)",
-    )).get_matches();
+    ))
+    .get_matches();
 
     print_red("Running analysis ....");
 
