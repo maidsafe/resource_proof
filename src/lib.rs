@@ -69,7 +69,6 @@
 
 #[cfg(test)]
 extern crate rand;
-extern crate tiny_keccak;
 use std::collections::VecDeque;
 use tiny_keccak::Keccak;
 

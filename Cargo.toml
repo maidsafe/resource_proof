@@ -8,6 +8,7 @@ name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/maidsafe/resource_proof"
 version = "0.6.0"
+edition = "2018"
 
 [dependencies]
 clap = "~2.29.0"

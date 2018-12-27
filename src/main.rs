@@ -53,12 +53,8 @@
     variant_size_differences
 )]
 
-extern crate resource_proof;
 #[macro_use]
 extern crate clap;
-extern crate rand;
-#[cfg(not(windows))]
-extern crate termion;
 
 use clap::{App, Arg};
 use resource_proof::ResourceProof;
