@@ -1,5 +1,8 @@
 # Resource Proof - Change Log
 
+## [0.7.0]
+- Update clap dependency to the latest version
+
 ## [0.6.0]
 - Use rust 1.22.1 stable / 2017-12-02 nightly
 - rustfmt 0.9.0 and clippy-0.0.175
