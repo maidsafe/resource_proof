@@ -1,5 +1,9 @@
 # Resource Proof - Change Log
 
+## [0.8.0]
+- Update tiny-keccak dependency
+- Use rust edition 2018
+
 ## [0.7.0]
 - Update clap dependency to the latest version
 

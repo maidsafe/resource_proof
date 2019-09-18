@@ -7,13 +7,13 @@ license = "MIT OR BSD-3-Clause"
 name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/maidsafe/resource_proof"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2018"
 
 [dependencies]
 clap = "~2.33.0"
 rand = "~0.4.1"
-tiny-keccak = "~1.4.0"
+tiny-keccak = "~1.5.0"
 
 [target."cfg(unix)".dependencies]
 termion = "~1.5.1"
