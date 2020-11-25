@@ -1,10 +1,10 @@
 # resource_proof
 
-|Crate|Documentation|Linux/macOS|Windows|Issues|
+|Crate|Documentation|CI|Issues|
 |:---:|:-----------:|:--------:|:-----:|:----:|
-|[![](http://meritbadge.herokuapp.com/resource_proof)](https://crates.io/crates/resource_proof)|[![Documentation](https://docs.rs/resource_proof/badge.svg)](https://docs.rs/resource_proof)|[![Build Status](https://travis-ci.com/maidsafe/resource_proof.svg?branch=master)](https://travis-ci.com/maidsafe/resource_proof)|[![Build status](https://ci.appveyor.com/api/projects/status/yurq5amiwiunlv7w/branch/master?svg=true)](https://ci.appveyor.com/project/MaidSafe-QA/resource-proof/branch/master)|[![Stories in Ready](https://badge.waffle.io/maidsafe/resource_proof.png?label=ready&title=Ready)](https://waffle.io/maidsafe/resource_proof)|
+|[![](http://meritbadge.herokuapp.com/resource_proof)](https://crates.io/crates/resource_proof)|[![Documentation](https://docs.rs/resource_proof/badge.svg)](https://docs.rs/resource_proof)|![](https://github.com/maidsafe/resource_proof/workflows/Master/badge.svg)|
 
-| [MaidSafe website](https://maidsafe.net) | [SAFE Dev Forum](https://forum.safedev.org) | [SAFE Network Forum](https://safenetforum.org) |
+| [MaidSafe website](https://maidsafe.net) | [Safe Dev Forum](https://forum.safedev.org) | [Safe Network Forum](https://safenetforum.org) |
 |:----------------------------------------:|:-------------------------------------------:|:----------------------------------------------:|
 
 ## Summary
@@ -129,4 +129,8 @@ This SAFE Network library is dual-licensed under the Modified BSD ([LICENSE-BSD]
 
 ## Contribution
 
-Copyrights in the SAFE Network are retained by their contributors. No copyright assignment is required to contribute to this project.
+Want to contribute? Great :tada:
+
+There are many ways to give back to the project, whether it be writing new code, fixing bugs, or just reporting errors. All forms of contributions are encouraged!
+
+For instructions on how to contribute, see our [Guide to contributing](https://github.com/maidsafe/QA/blob/master/CONTRIBUTING.md).
