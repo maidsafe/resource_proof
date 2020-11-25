@@ -13,7 +13,7 @@
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
 #![forbid(
     bad_style,
-    exceeding_bitshifts,
+    arithmetic_overflow,
     mutable_transmutes,
     no_mangle_const_items,
     unknown_crate_types,
@@ -25,7 +25,6 @@
     missing_docs,
     non_shorthand_field_patterns,
     overflowing_literals,
-    plugin_as_library,
     stable_features,
     unconditional_recursion,
     unknown_lints,
