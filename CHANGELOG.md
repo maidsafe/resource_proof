@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.31](https://github.com/maidsafe/resource_proof/compare/v0.8.0...v1.0.31) (2021-01-19)
+
 ### [0.8.0](https://github.com/maidsafe/resource_proof/compare/0.7.0...v0.8.0) (2019-09-18)
 - Update tiny-keccak dependency
 - Use rust edition 2018

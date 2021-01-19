@@ -1,5 +1,5 @@
 [package]
-authors = ["MaidSafe Developers <dev@maidsafe.net>"]
+authors = [ "MaidSafe Developers <dev@maidsafe.net>" ]
 description = "A 'proof' of bandwidth, cpu and storage for nodes in a decentralised network."
 documentation = "https://docs.rs/resource_proof"
 homepage = "https://maidsafe.net"
@@ -7,7 +7,7 @@ license = "MIT OR BSD-3-Clause"
 name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/maidsafe/resource_proof"
-version = "0.8.0"
+version = "1.0.31"
 edition = "2018"
 
 [dependencies]
