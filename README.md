@@ -1,7 +1,7 @@
 # resource_proof
 
-|Crate|Documentation|CI|Issues|
-|:---:|:-----------:|:--------:|:-----:|:----:|
+|Crate|Documentation|CI|
+|:---:|:-----------:|:--------:|
 |[![](http://meritbadge.herokuapp.com/resource_proof)](https://crates.io/crates/resource_proof)|[![Documentation](https://docs.rs/resource_proof/badge.svg)](https://docs.rs/resource_proof)|![](https://github.com/maidsafe/resource_proof/workflows/Master/badge.svg)|
 
 | [MaidSafe website](https://maidsafe.net) | [Safe Dev Forum](https://forum.safedev.org) | [Safe Network Forum](https://safenetforum.org) |

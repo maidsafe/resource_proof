@@ -209,7 +209,6 @@ fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand;
 
     #[test]
     fn valid_proof() {
