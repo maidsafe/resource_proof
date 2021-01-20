@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.33](https://github.com/maidsafe/resource_proof/compare/v1.0.32...v1.0.33) (2021-01-20)
+
 ### [1.0.32](https://github.com/maidsafe/resource_proof/compare/v1.0.31...v1.0.32) (2021-01-19)
 
 ### [1.0.31](https://github.com/maidsafe/resource_proof/compare/v0.8.0...v1.0.31) (2021-01-19)
