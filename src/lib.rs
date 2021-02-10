@@ -69,7 +69,7 @@
 #[cfg(test)]
 extern crate rand;
 use std::collections::VecDeque;
-use tiny_keccak::Keccak;
+use tiny_keccak::{Hasher, Sha3};
 
 /// Holds the prover requirements
 pub struct ResourceProof {
@@ -198,11 +198,11 @@ impl ResourceProver {
 
 /// Simple wrapper around tiny-keccak for use with deques
 fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
-    let mut sha3 = Keccak::new_sha3_256();
-    sha3.update(data.0);
-    sha3.update(data.1);
+    let mut hasher = Sha3::v256();
     let mut res = [0u8; 32];
-    sha3.finalize(&mut res);
+    hasher.update(data.0);
+    hasher.update(data.1);
+    hasher.finalize(&mut res);
     res
 }
 
