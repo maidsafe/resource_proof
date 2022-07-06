@@ -12,7 +12,6 @@
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
 #![forbid(
-    bad_style,
     arithmetic_overflow,
     mutable_transmutes,
     no_mangle_const_items,
@@ -52,10 +51,7 @@
     variant_size_differences
 )]
 
-#[macro_use]
-extern crate clap;
-
-use clap::{App, Arg};
+use clap::Parser;
 use resource_proof::ResourceProof;
 use std::time::Instant;
 #[cfg(not(windows))]
@@ -113,60 +109,45 @@ fn print_red(message: &str) {
     println!("{}", message);
 }
 
+#[derive(Parser, Debug)]
+#[clap(author, version)]
+#[clap(name = "Simple Resource Proof example")]
+#[clap(about = "Please set the size and difficulty to test", long_about = None)]
+#[clap(
+    after_help = "Several proofs may be chained, i.e. a large difficulty and small size or vice versa to check CPU And BW seperately"
+)]
+struct Config {
+    #[clap(short, long)]
+    #[clap(help = "The number of leading zeros of the proof when hashed with SHA3")]
+    difficulty: u8,
+
+    #[clap(short, long)]
+    #[clap(help = "The minimum size of the proof in bytes")]
+    size: usize,
+
+    #[clap(long, default_value = "A long long time ago..")]
+    #[clap(help = "Initial nonce seed")]
+    seed: String,
+
+    #[clap(short, long, action)]
+    #[clap(
+        help = "Will run continuously, increasing difficulty with every invocation. Note this will likley not stop in your lifetime :-)"
+    )]
+    increase: bool,
+}
+
 fn main() {
-    let matches = App::new(
-        "=============================\nSimple Resource Proof \
-         example\n=============================\n",
-    )
-    .about("______________________________\nPlease set the size and difficulty to test")
-    .author(crate_authors!())
-    .version(crate_version!())
-    .before_help("Resource proof testing framework")
-    .after_help(
-        "_____________________________________________________________\nSeveral \
-         proofs may be chained, i.e. a large difficulty and small size or large size \
-         and small difficulty to check specifically CPU And BW seperately",
-    )
-    .arg(
-        Arg::with_name("Difficulty")
-            .short("d")
-            .required(true)
-            .long("difficulty")
-            .help(
-                "Set difficulty, i.e. the number of leading zeros of the proof when hashed \
-                 with SHA3",
-            )
-            .takes_value(true),
-    )
-    .arg(
-        Arg::with_name("Size")
-            .required(true)
-            .short("s")
-            .long("size")
-            .help("Set size, i.e. the minimum size of the proof in bytes")
-            .takes_value(true),
-    )
-    .arg(Arg::with_name("Increase").short("i").long("increase").help(
-        "Will run continuously, increasing difficulty with every invocation. Note \
-         this will likley not stop in your lifetime :-)",
-    ))
-    .get_matches();
+    let config = Config::parse();
 
     print_red("Running analysis ....");
 
-    let repeat = matches.is_present("Increase");
+    let nonce = resource_proof::nonce_from_seed(config.seed.as_bytes());
 
-    let dif = value_t!(matches, "Difficulty", u8).unwrap_or(1);
-
-    let size = value_t!(matches, "Size", usize).unwrap_or(10);
-
-    let nonce = [rand::random::<u8>(); 32];
-
-    if repeat {
-        for i in dif.. {
-            test_it(i, size, nonce);
+    if config.increase {
+        for i in config.difficulty.. {
+            test_it(i, config.size, nonce);
         }
     } else {
-        test_it(dif, size, nonce);
+        test_it(config.difficulty, config.size, nonce);
     }
 }
