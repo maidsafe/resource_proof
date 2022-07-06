@@ -7,12 +7,16 @@ license = "MIT OR BSD-3-Clause"
 name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/maidsafe/resource_proof"
-version = "1.0.38"
+version = "1.0.39"
 edition = "2021"
 
-[dependencies]
-clap = { version = "3.0", features=["derive"] }
-tiny-keccak = { version = "2.0.2", features = ["sha3"] }
+[dependencies.clap]
+version = "3.0"
+features = [ "derive" ]
+
+[dependencies.tiny-keccak]
+version = "2.0.2"
+features = [ "sha3" ]
 
 [target."cfg(unix)".dependencies]
 termion = "~1.5.1"
