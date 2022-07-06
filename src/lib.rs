@@ -66,8 +66,6 @@
     variant_size_differences
 )]
 
-#[cfg(test)]
-extern crate rand;
 use std::collections::VecDeque;
 use tiny_keccak::{Hasher, Sha3};
 
@@ -196,6 +194,16 @@ impl ResourceProver {
     }
 }
 
+/// Hashes given seed into a nonce for use in proofs
+pub fn nonce_from_seed(seed: &[u8]) -> [u8; 32] {
+    let mut hasher = Sha3::v256();
+    hasher.update(seed);
+
+    let mut nonce = [0u8; 32];
+    hasher.finalize(&mut nonce);
+    nonce
+}
+
 /// Simple wrapper around tiny-keccak for use with deques
 fn hash(data: &(&[u8], &[u8])) -> [u8; 32] {
     let mut hasher = Sha3::v256();
@@ -212,8 +220,8 @@ mod tests {
 
     #[test]
     fn valid_proof() {
-        for _ in 0..20 {
-            let nonce = [rand::random::<u8>()];
+        for i in 0..20 {
+            let nonce = nonce_from_seed(&[i]);
             let rp = ResourceProof::new(1024, 3);
             let data = rp.create_proof_data(&nonce);
             let proof = rp.create_prover(data.clone()).solve();

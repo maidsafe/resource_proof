@@ -125,6 +125,10 @@ struct Config {
     #[clap(help = "The minimum size of the proof in bytes")]
     size: usize,
 
+    #[clap(long, default_value = "A long long time ago..")]
+    #[clap(help = "Initial nonce seed")]
+    seed: String,
+
     #[clap(short, long, action)]
     #[clap(
         help = "Will run continuously, increasing difficulty with every invocation. Note this will likley not stop in your lifetime :-)"
@@ -137,7 +141,7 @@ fn main() {
 
     print_red("Running analysis ....");
 
-    let nonce = [rand::random::<u8>(); 32];
+    let nonce = resource_proof::nonce_from_seed(config.seed.as_bytes());
 
     if config.increase {
         for i in config.difficulty.. {
