@@ -8,10 +8,10 @@ name = "resource_proof"
 readme = "README.md"
 repository = "https://github.com/maidsafe/resource_proof"
 version = "1.0.38"
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-clap = "~2.33.0"
+clap = { version = "3.0", features=["derive"] }
 rand = "~0.4.1"
 
   [dependencies.tiny-keccak]
